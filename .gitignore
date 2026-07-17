@@ -10,6 +10,7 @@ generated/
 # See https://ballerina.io/learn/provide-values-to-configurable-variables/ for more details.
 Config.toml
 
+lib/
 
 # Ballerina build artifacts
 target/
