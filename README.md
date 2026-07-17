@@ -23,7 +23,7 @@ name = "java_time_utils"
 ```ballerina
 import kruutteri1/java_time_utils.javatime as jt;
 ```
-ы
+
 ---
 
 ## Table of Contents
