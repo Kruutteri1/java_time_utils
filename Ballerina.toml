@@ -1,0 +1,19 @@
+[package]
+org = "kruutteri1"
+name = "java_time_utils"
+version = "1.0.0"
+distribution = "2201.13.4"
+keywords = ["java-time", "date", "time", "localdate", "localdatetime", "localtime"]
+repository = "https://github.com/kruutteri1/java_time_utils"
+license = ["Apache-2.0"]
+authors = ["kruutteri1"]
+
+[[package.modules]]
+name = "java_time_utils.javatime"
+export = true
+
+[build-options]
+observabilityIncluded = true
+
+
+
