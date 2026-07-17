@@ -1,7 +1,7 @@
 [package]
 org = "kruutteri1"
 name = "java_time_utils"
-version = "1.0.1"
+version = "1.0.2"
 distribution = "2201.13.4"
 keywords = ["java-time", "date", "time", "localdate", "localdatetime", "localtime"]
 repository = "https://github.com/Kruutteri1/java_time_utils"

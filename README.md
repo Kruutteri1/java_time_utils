@@ -18,6 +18,7 @@ A Ballerina wrapper library around `java.time` — providing `LocalDate`, `Local
 [[dependency]]
 org = "kruutteri1"
 name = "java_time_utils"
+version = "1.0.2"  # ⚠️ Check for the latest version below
 ```
 
 ```ballerina
