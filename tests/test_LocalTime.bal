@@ -8,7 +8,7 @@ import kruutteri1/java_time_utils.javatime as jt;
 
 @test:Config {}
 function testCreationWithNano() {
-    jt:LocalTime t = jt:ofHourMinuteSecondNano(10, 15, 30, 500000000);
+    jt:LocalTime t = jt:ofTimeWithSecondNano(10, 15, 30, 500000000);
     test:assertEquals(t.getHour(), 10);
     test:assertEquals(t.getMinute(), 15);
     test:assertEquals(t.getSecond(), 30);
@@ -53,7 +53,7 @@ function testOfSecondOfDayComplex() {
 
 @test:Config {}
 function testConstantsMax_LocalTime() {
-    jt:LocalTime max = jt:getMAX();
+    jt:LocalTime max = jt:getMAXTime();
     test:assertEquals(max.getHour(), 23, "MAX should have hour 23");
     test:assertEquals(max.getMinute(), 59);
     test:assertEquals(max.getSecond(), 59);
@@ -68,9 +68,9 @@ function testConstantsNoon() {
 
 @test:Config {}
 function testConstantsMidnightEqualsMin() {
-    jt:LocalTime min = jt:getMin();
+    jt:LocalTime min = jt:getMinTime();
     jt:LocalTime midnight = jt:getMIDNIGHT();
-    test:assertTrue(min.'equals(midnight), "MIN and MIDNIGHT should be equal");
+    test:assertTrue(min.isEquals(midnight), "MIN and MIDNIGHT should be equal");
     test:assertEquals(min.toString(), midnight.toString());
 }
 
@@ -80,26 +80,26 @@ function testConstantsMidnightEqualsMin() {
 
 @test:Config {}
 function testToStringFormat_LocalTime() {
-    jt:LocalTime t = jt:ofHourMinuteSecond(9, 5, 3);
+    jt:LocalTime t = jt:ofTimeWithSecond(9, 5, 3);
     test:assertEquals(t.toString(), "09:05:03", "String representation should be in ISO format");
 }
 
 @test:Config {}
 function testGetNano_LocalTime() {
-    jt:LocalTime t = jt:ofHourMinuteSecondNano(0, 0, 0, 123456789);
+    jt:LocalTime t = jt:ofTimeWithSecondNano(0, 0, 0, 123456789);
     test:assertEquals(t.getNano(), 123456789);
 }
 
 @test:Config {}
 function testHashCodeConsistency_LocalTime() {
-    jt:LocalTime t1 = jt:ofHourMinuteSecond(10, 15, 30);
-    jt:LocalTime t2 = jt:ofHourMinuteSecond(10, 15, 30);
+    jt:LocalTime t1 = jt:ofTimeWithSecond(10, 15, 30);
+    jt:LocalTime t2 = jt:ofTimeWithSecond(10, 15, 30);
     test:assertEquals(t1.hashCode(), t2.hashCode(), "Hash codes of equal values should match");
 }
 
 @test:Config {}
 function testGetClassNotNull() {
-    jt:LocalTime now = jt:LocalTime_now();
+    jt:LocalTime now = jt:getCurrentTime();
     test:assertTrue(now.getHour() >= 0 && now.getHour() <= 23, "LocalTime_now() should return a valid time of day");
 }
 
@@ -109,43 +109,43 @@ function testGetClassNotNull() {
 
 @test:Config {}
 function testEqualsFalseForDifferentTimes() {
-    jt:LocalTime t1 = jt:ofHourMinute(10, 0);
-    jt:LocalTime t2 = jt:ofHourMinute(11, 0);
-    test:assertFalse(t1.'equals(t2), "Different times should not be equal");
+    jt:LocalTime t1 = jt:ofTime(10, 0);
+    jt:LocalTime t2 = jt:ofTime(11, 0);
+    test:assertFalse(t1.isEquals(t2), "Different times should not be equal");
 }
 
 @test:Config {}
 function testEqualsTrueForSameValues_LocalTime() {
-    jt:LocalTime t1 = jt:ofHourMinuteSecond(10, 15, 30);
-    jt:LocalTime t2 = jt:ofHourMinuteSecond(10, 15, 30);
-    test:assertTrue(t1.'equals(t2), "Identical time values should be equal");
+    jt:LocalTime t1 = jt:ofTimeWithSecond(10, 15, 30);
+    jt:LocalTime t2 = jt:ofTimeWithSecond(10, 15, 30);
+    test:assertTrue(t1.isEquals(t2), "Identical time values should be equal");
 }
 
 @test:Config {}
 function testCompareToEqual() {
-    jt:LocalTime t1 = jt:ofHourMinute(10, 0);
-    jt:LocalTime t2 = jt:ofHourMinute(10, 0);
+    jt:LocalTime t1 = jt:ofTime(10, 0);
+    jt:LocalTime t2 = jt:ofTime(10, 0);
     test:assertEquals(t1.compareTo(t2), 0, "Equal times should compare as 0");
 }
 
 @test:Config {}
 function testCompareToGreater() {
-    jt:LocalTime t1 = jt:ofHourMinute(11, 0);
-    jt:LocalTime t2 = jt:ofHourMinute(10, 0);
+    jt:LocalTime t1 = jt:ofTime(11, 0);
+    jt:LocalTime t2 = jt:ofTime(10, 0);
     test:assertEquals(t1.compareTo(t2), 1, "11:00 should be greater than 10:00");
 }
 
 @test:Config {}
 function testIsAfterFalseWhenEqual() {
-    jt:LocalTime t1 = jt:ofHourMinute(10, 0);
-    jt:LocalTime t2 = jt:ofHourMinute(10, 0);
+    jt:LocalTime t1 = jt:ofTime(10, 0);
+    jt:LocalTime t2 = jt:ofTime(10, 0);
     test:assertFalse(t1.isAfter(t2), "A time cannot be 'after' itself");
 }
 
 @test:Config {}
 function testIsBeforeFalseWhenEqual() {
-    jt:LocalTime t1 = jt:ofHourMinute(10, 0);
-    jt:LocalTime t2 = jt:ofHourMinute(10, 0);
+    jt:LocalTime t1 = jt:ofTime(10, 0);
+    jt:LocalTime t2 = jt:ofTime(10, 0);
     test:assertFalse(t1.isBefore(t2), "A time cannot be 'before' itself");
 }
 
@@ -155,8 +155,8 @@ function testIsBeforeFalseWhenEqual() {
 
 @test:Config {}
 function testAtDateProducesCorrectDateTime() {
-    jt:LocalTime t = jt:ofHourMinuteSecond(14, 28, 19);
-    jt:LocalDate d = jt:LocalDate_of(2026, 1, 1);
+    jt:LocalTime t = jt:ofTimeWithSecond(14, 28, 19);
+    jt:LocalDate d = jt:ofDate(2026, 1, 1);
     jt:LocalDateTime dt = t.atDate(d);
 
     test:assertEquals(dt.toString(), "2026-01-01T14:28:19");
@@ -175,7 +175,7 @@ function testToSecondOfDayMidnight() {
 @test:Config {}
 function testToSecondOfDayValue() {
     // 01:00:00 = 3600 seconds of day
-    jt:LocalTime t = jt:ofHourMinuteSecond(1, 0, 0);
+    jt:LocalTime t = jt:ofTimeWithSecond(1, 0, 0);
     test:assertEquals(t.toSecondOfDay(), 3600);
 }
 
@@ -187,7 +187,7 @@ function testToNanoOfDayMidnight() {
 
 @test:Config {}
 function testToNanoOfDayValue() {
-    jt:LocalTime t = jt:ofHourMinuteSecond(1, 0, 0);
+    jt:LocalTime t = jt:ofTimeWithSecond(1, 0, 0);
     test:assertEquals(t.toNanoOfDay(), 3600000000000);
 }
 
@@ -205,7 +205,7 @@ function testSecondOfDayRoundTrip() {
 
 @test:Config {}
 function testPlusMinutesWraparound() {
-    jt:LocalTime t = jt:ofHourMinute(23, 55);
+    jt:LocalTime t = jt:ofTime(23, 55);
     jt:LocalTime next = t.plusMinutes(10);
     test:assertEquals(next.getHour(), 0, "23:55 + 10 minutes should roll over to the next day: 00:05");
     test:assertEquals(next.getMinute(), 5);
@@ -213,7 +213,7 @@ function testPlusMinutesWraparound() {
 
 @test:Config {}
 function testPlusSeconds_LocalTime() {
-    jt:LocalTime t = jt:ofHourMinuteSecond(10, 0, 50);
+    jt:LocalTime t = jt:ofTimeWithSecond(10, 0, 50);
     jt:LocalTime next = t.plusSeconds(20);
     test:assertEquals(next.getMinute(), 1, "10:00:50 + 20 seconds = 10:01:10");
     test:assertEquals(next.getSecond(), 10);
@@ -221,7 +221,7 @@ function testPlusSeconds_LocalTime() {
 
 @test:Config {}
 function testPlusNanos_LocalTime() {
-    jt:LocalTime t = jt:ofHourMinuteSecondNano(0, 0, 0, 900000000);
+    jt:LocalTime t = jt:ofTimeWithSecondNano(0, 0, 0, 900000000);
     jt:LocalTime next = t.plusNanos(200000000);
     test:assertEquals(next.getSecond(), 1, "900ms + 200ms should roll over into the next second");
     test:assertEquals(next.getNano(), 100000000);
@@ -233,14 +233,14 @@ function testPlusNanos_LocalTime() {
 
 @test:Config {}
 function testMinusHoursWraparound() {
-    jt:LocalTime t = jt:ofHourMinute(1, 0);
+    jt:LocalTime t = jt:ofTime(1, 0);
     jt:LocalTime prev = t.minusHours(2);
     test:assertEquals(prev.getHour(), 23, "01:00 - 2 hours should roll back to the previous day: 23:00");
 }
 
 @test:Config {}
 function testMinusSeconds_LocalTime() {
-    jt:LocalTime t = jt:ofHourMinuteSecond(10, 1, 10);
+    jt:LocalTime t = jt:ofTimeWithSecond(10, 1, 10);
     jt:LocalTime prev = t.minusSeconds(20);
     test:assertEquals(prev.getMinute(), 0, "10:01:10 - 20 seconds = 10:00:50");
     test:assertEquals(prev.getSecond(), 50);
@@ -248,7 +248,7 @@ function testMinusSeconds_LocalTime() {
 
 @test:Config {}
 function testMinusNanos_LocalTime() {
-    jt:LocalTime t = jt:ofHourMinuteSecondNano(0, 0, 1, 100000000);
+    jt:LocalTime t = jt:ofTimeWithSecondNano(0, 0, 1, 100000000);
     jt:LocalTime prev = t.minusNanos(200000000);
     test:assertEquals(prev.getSecond(), 0, "1s 100ms - 200ms should roll back into the previous second");
     test:assertEquals(prev.getNano(), 900000000);
@@ -260,7 +260,7 @@ function testMinusNanos_LocalTime() {
 
 @test:Config {}
 function testWithSecond_LocalTime() {
-    jt:LocalTime t = jt:ofHourMinuteSecond(10, 15, 30);
+    jt:LocalTime t = jt:ofTimeWithSecond(10, 15, 30);
     jt:LocalTime changed = t.withSecond(0);
     test:assertEquals(changed.getSecond(), 0);
     // Other fields should remain unchanged
@@ -270,14 +270,14 @@ function testWithSecond_LocalTime() {
 
 @test:Config {}
 function testWithNano_LocalTime() {
-    jt:LocalTime t = jt:ofHourMinuteSecond(10, 15, 30);
+    jt:LocalTime t = jt:ofTimeWithSecond(10, 15, 30);
     jt:LocalTime changed = t.withNano(500000000);
     test:assertEquals(changed.getNano(), 500000000);
 }
 
 @test:Config {}
 function testWithMethodsChainImmutability_LocalTime() {
-    jt:LocalTime original = jt:ofHourMinuteSecond(10, 15, 30);
+    jt:LocalTime original = jt:ofTimeWithSecond(10, 15, 30);
     jt:LocalTime _ = original.withHour(0).withMinute(0).withSecond(0).withNano(0);
 
     // The original object should remain unchanged
@@ -292,7 +292,7 @@ function testWithMethodsChainImmutability_LocalTime() {
 
 @test:Config {}
 function testComplexScenario_LocalTime() {
-    jt:LocalTime t = jt:ofHourMinuteSecond(22, 30, 0);
+    jt:LocalTime t = jt:ofTimeWithSecond(22, 30, 0);
     jt:LocalTime result = t.plusHours(3).minusMinutes(15);
 
     // 22:30 + 3h = 01:30 (next day) - 15 minutes = 01:15
@@ -306,25 +306,25 @@ function testComplexScenario_LocalTime() {
 
 @test:Config {}
 function testInvalidHourThrows_() {
-    jt:LocalTime|error t = trap jt:ofHourMinute(24, 0);
+    jt:LocalTime|error t = trap jt:ofTime(24, 0);
     test:assertTrue(t is error);
 }
 
 @test:Config {}
 function testNegativeHourThrows() {
-    jt:LocalTime|error t = trap jt:ofHourMinute(-1, 0);
+    jt:LocalTime|error t = trap jt:ofTime(-1, 0);
     test:assertTrue(t is error);
 }
 
 @test:Config {}
 function testInvalidMinuteThrows_() {
-    jt:LocalTime|error t = trap jt:ofHourMinute(10, 60);
+    jt:LocalTime|error t = trap jt:ofTime(10, 60);
     test:assertTrue(t is error);
 }
 
 @test:Config {}
 function testInvalidSecondThrows_() {
-    jt:LocalTime|error t = trap jt:ofHourMinuteSecond(10, 0, 60);
+    jt:LocalTime|error t = trap jt:ofTimeWithSecond(10, 0, 60);
     test:assertTrue(t is error);
 }
 
@@ -344,14 +344,14 @@ function testInvalidSecondOfDayThrows() {
 
 @test:Config {}
 function testWithInvalidHourThrows_() {
-    jt:LocalTime t = jt:ofHourMinute(10, 0);
+    jt:LocalTime t = jt:ofTime(10, 0);
     jt:LocalTime|error result = trap t.withHour(25);
     test:assertTrue(result is error);
 }
 
 @test:Config {}
 function testWithInvalidMinuteThrows() {
-    jt:LocalTime t = jt:ofHourMinute(10, 0);
+    jt:LocalTime t = jt:ofTime(10, 0);
     jt:LocalTime|error result = trap t.withMinute(60);
     test:assertTrue(result is error);
 }
@@ -359,82 +359,82 @@ function testWithInvalidMinuteThrows() {
 // ===== Hour =====
 @test:Config {}
 function testHourNegativeThrows_() {
-    jt:LocalTime|error t = trap jt:ofHourMinute(-1, 0);
+    jt:LocalTime|error t = trap jt:ofTime(-1, 0);
     test:assertTrue(t is error);
 }
 
 @test:Config {}
 function testHour24Throws_() {
-    jt:LocalTime|error t = trap jt:ofHourMinute(24, 0);
+    jt:LocalTime|error t = trap jt:ofTime(24, 0);
     test:assertTrue(t is error);
 }
 
 @test:Config {}
 function testHour23IsValid_() {
-    jt:LocalTime|error t = trap jt:ofHourMinute(23, 0);
+    jt:LocalTime|error t = trap jt:ofTime(23, 0);
     test:assertTrue(t is jt:LocalTime);
 }
 
 @test:Config {}
 function testHour0IsValid_() {
-    jt:LocalTime|error t = trap jt:ofHourMinute(0, 0);
+    jt:LocalTime|error t = trap jt:ofTime(0, 0);
     test:assertTrue(t is jt:LocalTime);
 }
 
 // ===== Minute =====
 @test:Config {}
 function testMinuteNegativeThrows_() {
-    jt:LocalTime|error t = trap jt:ofHourMinute(10, -1);
+    jt:LocalTime|error t = trap jt:ofTime(10, -1);
     test:assertTrue(t is error);
 }
 
 @test:Config {}
 function testMinute60Throws_() {
-    jt:LocalTime|error t = trap jt:ofHourMinute(10, 60);
+    jt:LocalTime|error t = trap jt:ofTime(10, 60);
     test:assertTrue(t is error);
 }
 
 @test:Config {}
 function testMinute59IsValid_() {
-    jt:LocalTime|error t = trap jt:ofHourMinute(10, 59);
+    jt:LocalTime|error t = trap jt:ofTime(10, 59);
     test:assertTrue(t is jt:LocalTime);
 }
 
 // ===== Second =====
 @test:Config {}
 function testSecondNegativeThrows_() {
-    jt:LocalTime|error t = trap jt:ofHourMinuteSecond(10, 0, -1);
+    jt:LocalTime|error t = trap jt:ofTimeWithSecond(10, 0, -1);
     test:assertTrue(t is error);
 }
 
 @test:Config {}
 function testSecond60Throws_() {
-    jt:LocalTime|error t = trap jt:ofHourMinuteSecond(10, 0, 60);
+    jt:LocalTime|error t = trap jt:ofTimeWithSecond(10, 0, 60);
     test:assertTrue(t is error);
 }
 
 @test:Config {}
 function testSecond59IsValid_() {
-    jt:LocalTime|error t = trap jt:ofHourMinuteSecond(10, 0, 59);
+    jt:LocalTime|error t = trap jt:ofTimeWithSecond(10, 0, 59);
     test:assertTrue(t is jt:LocalTime);
 }
 
 // ===== Наносекунда =====
 @test:Config {}
 function testNanoNegativeThrows_() {
-    jt:LocalTime|error t = trap jt:ofHourMinuteSecondNano(10, 0, 0, -1);
+    jt:LocalTime|error t = trap jt:ofTimeWithSecondNano(10, 0, 0, -1);
     test:assertTrue(t is error);
 }
 
 @test:Config {}
 function testNano1000000000Throws_() {
-    jt:LocalTime|error t = trap jt:ofHourMinuteSecondNano(10, 0, 0, 1000000000);
+    jt:LocalTime|error t = trap jt:ofTimeWithSecondNano(10, 0, 0, 1000000000);
     test:assertTrue(t is error);
 }
 
 @test:Config {}
 function testNano999999999IsValid_() {
-    jt:LocalTime|error t = trap jt:ofHourMinuteSecondNano(10, 0, 0, 999999999);
+    jt:LocalTime|error t = trap jt:ofTimeWithSecondNano(10, 0, 0, 999999999);
     test:assertTrue(t is jt:LocalTime);
 }
 

@@ -127,7 +127,7 @@ public distinct class LocalDate {
     # Checks if this date is equal to another object.
     # + other - The object to check equality with.
     # + return - True if equal, false otherwise.
-    public function 'equals(Object other) returns boolean {
+    public function isEquals(Object other) returns boolean {
         return java_time_LocalDate_equals(self.jObj, other.jObj);
     }
 
@@ -199,7 +199,7 @@ public distinct class LocalDate {
         return new (externalObj);
     }
 
-  # Returns the month-of-year value (1-12).
+    # Returns the month-of-year value (1-12).
     # + return - The month-of-year.
     public function getMonthValue() returns int {
         return java_time_LocalDate_getMonthValue(self.jObj);
@@ -303,7 +303,7 @@ public distinct class LocalDate {
         return new (externalObj);
     }
 
-   # Returns a copy of this date with the specified number of weeks subtracted.
+    # Returns a copy of this date with the specified number of weeks subtracted.
     #
     # + weeks - The number of weeks to subtract.
     # + return - A new LocalDate with the weeks subtracted.
@@ -352,7 +352,7 @@ public distinct class LocalDate {
         return new (externalObj);
     }
 
-   # Returns a copy of this date with the specified number of days added.
+    # Returns a copy of this date with the specified number of days added.
     #
     # + days - The number of days to add, may be negative.
     # + return - A new LocalDate with the days added.
@@ -446,7 +446,7 @@ public distinct class LocalDate {
     # WARNING: Low-level Java synchronization method. Use with caution.
     #
     # + return - An InterruptedException if the thread is interrupted while waiting.
-    public function 'wait() returns InterruptedException? {
+    public function doWait() returns InterruptedException? {
         error|() externalObj = java_time_LocalDate_wait(self.jObj);
         if (externalObj is error) {
             InterruptedException e = error InterruptedException(INTERRUPTEDEXCEPTION, externalObj, message = externalObj.message());
@@ -459,7 +459,7 @@ public distinct class LocalDate {
     #
     # + timeoutMillis - The maximum time to wait in milliseconds.
     # + return - An InterruptedException if the thread is interrupted while waiting.
-    public function wait2(int timeoutMillis) returns InterruptedException? {
+    public function waitWithTimeout(int timeoutMillis) returns InterruptedException? {
         error|() externalObj = java_time_LocalDate_wait2(self.jObj, timeoutMillis);
         if (externalObj is error) {
             InterruptedException e = error InterruptedException(INTERRUPTEDEXCEPTION, externalObj, message = externalObj.message());
@@ -473,7 +473,7 @@ public distinct class LocalDate {
     # + timeoutMillis - The maximum time to wait in milliseconds.
     # + nanos - Additional nanoseconds to wait.
     # + return - An InterruptedException if the thread is interrupted while waiting.
-    public function wait3(int timeoutMillis, int nanos) returns InterruptedException? {
+    public function waitWithTimeoutAndNanos(int timeoutMillis, int nanos) returns InterruptedException? {
         error|() externalObj = java_time_LocalDate_wait3(self.jObj, timeoutMillis, nanos);
         if (externalObj is error) {
             InterruptedException e = error InterruptedException(INTERRUPTEDEXCEPTION, externalObj, message = externalObj.message());
@@ -548,7 +548,7 @@ public distinct class LocalDate {
 #
 # + temporalAccessor - The temporal object to convert.
 # + return - The LocalDate.
-function LocalDate_from(TemporalAccessor temporalAccessor) returns LocalDate {
+function fromTemporal(TemporalAccessor temporalAccessor) returns LocalDate {
     handle externalObj = java_time_LocalDate_from(temporalAccessor.jObj);
     LocalDate newObj = new (externalObj);
     return newObj;
@@ -557,7 +557,7 @@ function LocalDate_from(TemporalAccessor temporalAccessor) returns LocalDate {
 # Obtains the current date from the system clock in the default time-zone.
 #
 # + return - The current LocalDate.
-public function LocalDate_now() returns LocalDate {
+public function getCurrentDate() returns LocalDate {
     handle externalObj = java_time_LocalDate_now();
     LocalDate newObj = new (externalObj);
     return newObj;
@@ -567,7 +567,7 @@ public function LocalDate_now() returns LocalDate {
 #
 # + clock - The clock to use.
 # + return - The current LocalDate.
-function LocalDate_nowWithClock(Clock clock) returns LocalDate {
+function nowWithClock(Clock clock) returns LocalDate {
     handle externalObj = java_time_LocalDate_now2(clock.jObj);
     LocalDate newObj = new (externalObj);
     return newObj;
@@ -577,7 +577,7 @@ function LocalDate_nowWithClock(Clock clock) returns LocalDate {
 #
 # + zone - The time-zone to use.
 # + return - The current LocalDate.
-function LocalDate_nowWithZone(ZoneId zone) returns LocalDate {
+function WithZone(ZoneId zone) returns LocalDate {
     handle externalObj = java_time_LocalDate_now3(zone.jObj);
     LocalDate newObj = new (externalObj);
     return newObj;
@@ -589,7 +589,7 @@ function LocalDate_nowWithZone(ZoneId zone) returns LocalDate {
 # + month - The month-of-year (1-12).
 # + day - The day-of-month (1-31).
 # + return - The LocalDate.
-public function LocalDate_of(int year, int month, int day) returns LocalDate {
+public function ofDate(int year, int month, int day) returns LocalDate {
     handle externalObj = java_time_LocalDate_of(year, month, day);
     LocalDate newObj = new (externalObj);
     return newObj;
@@ -601,7 +601,7 @@ public function LocalDate_of(int year, int month, int day) returns LocalDate {
 # + month - The month enum.
 # + day - The day-of-month (1-31).
 # + return - The LocalDate.
-function LocalDate_ofMonth(int year, Month month, int day) returns LocalDate {
+function ofMonth(int year, Month month, int day) returns LocalDate {
     handle externalObj = java_time_LocalDate_of2(year, month.jObj, day);
     LocalDate newObj = new (externalObj);
     return newObj;
@@ -611,7 +611,7 @@ function LocalDate_ofMonth(int year, Month month, int day) returns LocalDate {
 #
 # + epochDay - The number of days from the epoch of 1970-01-01.
 # + return - The LocalDate.
-public function LocalDate_ofEpochDay(int epochDay) returns LocalDate {
+public function ofEpochDay(int epochDay) returns LocalDate {
     handle externalObj = java_time_LocalDate_ofEpochDay(epochDay);
     LocalDate newObj = new (externalObj);
     return newObj;
@@ -622,7 +622,7 @@ public function LocalDate_ofEpochDay(int epochDay) returns LocalDate {
 # + instant - The instant to use.
 # + zone - The time-zone to use.
 # + return - The LocalDate.
-function LocalDate_ofInstant(Instant instant, ZoneId zone) returns LocalDate {
+function ofInstant(Instant instant, ZoneId zone) returns LocalDate {
     handle externalObj = java_time_LocalDate_ofInstant(instant.jObj, zone.jObj);
     LocalDate newObj = new (externalObj);
     return newObj;
@@ -633,7 +633,7 @@ function LocalDate_ofInstant(Instant instant, ZoneId zone) returns LocalDate {
 # + year - The year to represent.
 # + dayOfYear - The day-of-year to represent (1-366).
 # + return - The LocalDate.
-public function LocalDate_ofYearDay(int year, int dayOfYear) returns LocalDate {
+public function ofYearDay(int year, int dayOfYear) returns LocalDate {
     handle externalObj = java_time_LocalDate_ofYearDay(year, dayOfYear);
     LocalDate newObj = new (externalObj);
     return newObj;
@@ -643,7 +643,7 @@ public function LocalDate_ofYearDay(int year, int dayOfYear) returns LocalDate {
 #
 # + text - The text to parse, such as "2026-07-15".
 # + return - The LocalDate.
-function LocalDate_parse(CharSequence text) returns LocalDate {
+function parse(CharSequence text) returns LocalDate {
     handle externalObj = java_time_LocalDate_parse(text.jObj);
     LocalDate newObj = new (externalObj);
     return newObj;
@@ -654,7 +654,7 @@ function LocalDate_parse(CharSequence text) returns LocalDate {
 # + text - The text to parse.
 # + formatter - The formatter to use.
 # + return - The LocalDate.
-function LocalDate_parse2(CharSequence text, DateTimeFormatter formatter) returns LocalDate {
+function parseWithFormatter(CharSequence text, DateTimeFormatter formatter) returns LocalDate {
     handle externalObj = java_time_LocalDate_parse2(text.jObj, formatter.jObj);
     LocalDate newObj = new (externalObj);
     return newObj;
@@ -663,7 +663,7 @@ function LocalDate_parse2(CharSequence text, DateTimeFormatter formatter) return
 # Returns the minimum supported LocalDate (year -999999999-01-01).
 #
 # + return - The MIN constant.
-public function LocalDate_getMIN() returns LocalDate {
+public function getMINDate() returns LocalDate {
     handle externalObj = java_time_LocalDate_getMIN();
     LocalDate newObj = new (externalObj);
     return newObj;
@@ -672,7 +672,7 @@ public function LocalDate_getMIN() returns LocalDate {
 # Returns the maximum supported LocalDate (year 999999999-12-31).
 #
 # + return - The MAX constant.
-public function LocalDate_getMAX() returns LocalDate {
+public function getMAXDate() returns LocalDate {
     handle externalObj = java_time_LocalDate_getMAX();
     LocalDate newObj = new (externalObj);
     return newObj;
@@ -681,7 +681,7 @@ public function LocalDate_getMAX() returns LocalDate {
 # Returns the epoch date (1970-01-01).
 #
 # + return - The EPOCH constant.
-public function LocalDate_getEPOCH() returns LocalDate {
+public function getEPOCHDate() returns LocalDate {
     handle externalObj = java_time_LocalDate_getEPOCH();
     LocalDate newObj = new (externalObj);
     return newObj;

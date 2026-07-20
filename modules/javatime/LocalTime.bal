@@ -68,7 +68,7 @@ public distinct class LocalTime {
     #
     # + other - The object to check for equality.
     # + return - True if this time is equal to the specified object.
-    public function 'equals(Object other) returns boolean {
+    public function isEquals(Object other) returns boolean {
         return java_time_LocalTime_equals(self.jObj, other.jObj);
     }
 
@@ -369,7 +369,7 @@ public distinct class LocalTime {
     # Waits to be notified by another thread.
     #
     # + return - An error if the wait is interrupted, or () if successful.
-    public function 'wait() returns InterruptedException? {
+    public function doWait() returns InterruptedException? {
         error|() externalObj = java_time_LocalTime_wait(self.jObj);
         if (externalObj is error) {
             InterruptedException e = error InterruptedException(INTERRUPTEDEXCEPTION, externalObj, message = externalObj.message());
@@ -381,7 +381,7 @@ public distinct class LocalTime {
     #
     # + timeoutMillis - The maximum time to wait in milliseconds.
     # + return - An error if the wait is interrupted, or () if successful.
-    public function wait2(int timeoutMillis) returns InterruptedException? {
+    public function waitWithTimeout(int timeoutMillis) returns InterruptedException? {
         error|() externalObj = java_time_LocalTime_wait2(self.jObj, timeoutMillis);
         if (externalObj is error) {
             InterruptedException e = error InterruptedException(INTERRUPTEDEXCEPTION, externalObj, message = externalObj.message());
@@ -394,7 +394,7 @@ public distinct class LocalTime {
     # + timeoutMillis - The maximum time to wait in milliseconds.
     # + nanos - The additional nanoseconds to wait.
     # + return - An error if the wait is interrupted, or () if successful.
-    public function wait3(int timeoutMillis, int nanos) returns InterruptedException? {
+    public function waitWithTimeoutAndNanos(int timeoutMillis, int nanos) returns InterruptedException? {
         error|() externalObj = java_time_LocalTime_wait3(self.jObj, timeoutMillis, nanos);
         if (externalObj is error) {
             InterruptedException e = error InterruptedException(INTERRUPTEDEXCEPTION, externalObj, message = externalObj.message());
@@ -478,7 +478,7 @@ function LocalTime_from(TemporalAccessor temporal) returns LocalTime {
 # Obtains the current time from the system clock in the default time-zone.
 #
 # + return - The current time.
-public function LocalTime_now() returns LocalTime {
+public function getCurrentTime() returns LocalTime {
     handle externalObj = java_time_LocalTime_now();
     LocalTime newObj = new (externalObj);
     return newObj;
@@ -509,7 +509,7 @@ function nowFromZone(ZoneId zone) returns LocalTime {
 # + hour - The hour-of-day to represent.
 # + minute - The minute-of-hour to represent.
 # + return - The LocalTime.
-public function ofHourMinute(int hour, int minute) returns LocalTime {
+public function ofTime(int hour, int minute) returns LocalTime {
     handle externalObj = java_time_LocalTime_of(hour, minute);
     LocalTime newObj = new (externalObj);
     return newObj;
@@ -521,7 +521,7 @@ public function ofHourMinute(int hour, int minute) returns LocalTime {
 # + minute - The minute-of-hour to represent.
 # + second - The second-of-minute to represent.
 # + return - The LocalTime.
-public function ofHourMinuteSecond(int hour, int minute, int second) returns LocalTime {
+public function ofTimeWithSecond(int hour, int minute, int second) returns LocalTime {
     handle externalObj = java_time_LocalTime_of2(hour, minute, second);
     LocalTime newObj = new (externalObj);
     return newObj;
@@ -534,7 +534,7 @@ public function ofHourMinuteSecond(int hour, int minute, int second) returns Loc
 # + second - The second-of-minute.
 # + nanoOfSecond - The nano-of-second.
 # + return - The LocalTime.
-public function ofHourMinuteSecondNano(int hour, int minute, int second, int nanoOfSecond) returns LocalTime {
+public function ofTimeWithSecondNano(int hour, int minute, int second, int nanoOfSecond) returns LocalTime {
     handle externalObj = java_time_LocalTime_of3(hour, minute, second, nanoOfSecond);
     LocalTime newObj = new (externalObj);
     return newObj;
@@ -545,7 +545,7 @@ public function ofHourMinuteSecondNano(int hour, int minute, int second, int nan
 # + instant - The instant to create the time from.
 # + zone - The time-zone to use.
 # + return - The LocalTime.
-function ofInstant(Instant instant, ZoneId zone) returns LocalTime {
+function ofInstantWithZones(Instant instant, ZoneId zone) returns LocalTime {
     handle externalObj = java_time_LocalTime_ofInstant(instant.jObj, zone.jObj);
     LocalTime newObj = new (externalObj);
     return newObj;
@@ -575,7 +575,7 @@ public function ofSecondOfDay(int secondOfDay) returns LocalTime {
 #
 # + text - The text to parse.
 # + return - The LocalTime.
-function parse(CharSequence text) returns LocalTime {
+function parseText(CharSequence text) returns LocalTime {
     handle externalObj = java_time_LocalTime_parse(text.jObj);
     LocalTime newObj = new (externalObj);
     return newObj;
@@ -586,7 +586,7 @@ function parse(CharSequence text) returns LocalTime {
 # + text - The text to parse.
 # + formatter - The formatter to use.
 # + return - The LocalTime.
-function parseWithFormatter(CharSequence text, DateTimeFormatter formatter) returns LocalTime {
+function parseTextWithFormatter(CharSequence text, DateTimeFormatter formatter) returns LocalTime {
     handle externalObj = java_time_LocalTime_parse2(text.jObj, formatter.jObj);
     LocalTime newObj = new (externalObj);
     return newObj;
@@ -595,7 +595,7 @@ function parseWithFormatter(CharSequence text, DateTimeFormatter formatter) retu
 # Retrieves the value of the public field `MIN`.
 #
 # + return - The `LocalTime` value of the field.
-public function getMin() returns LocalTime {
+public function getMinTime() returns LocalTime {
     handle externalObj = java_time_LocalTime_getMIN();
     LocalTime newObj = new (externalObj);
     return newObj;
@@ -604,7 +604,7 @@ public function getMin() returns LocalTime {
 # Retrieves the value of the public field `MAX`.
 #
 # + return - The `LocalTime` value of the field.
-public function getMAX() returns LocalTime {
+public function getMAXTime() returns LocalTime {
     handle externalObj = java_time_LocalTime_getMAX();
     LocalTime newObj = new (externalObj);
     return newObj;

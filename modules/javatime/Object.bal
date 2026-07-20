@@ -1,66 +1,84 @@
 import ballerina/jballerina.java;
 
-# Ballerina class mapping for the Java `java.lang.Object` class.
-@java:Binding {'class: "java.lang.Object"}
+# Ballerina wrapper for the Java `java.lang.Object` class.
+#
+# `Object` is the root type used across this library so that different
+# time-related classes (`LocalDate`, `LocalDateTime`, `LocalTime`) can share
+# a common contract for equality, hashing, and low-level Java thread
+# synchronization.@java:Binding {'class: "java.lang.Object"}
 public distinct class Object {
 
     *java:JObject;
 
-    # The `handle` field that stores the reference to the `java.lang.Object` object.
+    # The handle to the underlying Java object.
     public handle jObj;
 
-    # The init function of the Ballerina class mapping the `java.lang.Object` Java class.
+    # Initializes the Object wrapper.
     #
-    # + obj - The `handle` value containing the Java reference of the object.
+    # + obj - The handle value containing the Java reference.
     public function init(handle obj) {
         self.jObj = obj;
     }
 
-    # The function to retrieve the string representation of the Ballerina class mapping the `java.lang.Object` Java class.
+    # Returns the string representation of this object.
     #
-    # + return - The `string` form of the Java object instance.
+    # + return - The string form of the Java object instance.
     public function toString() returns string {
         return java:toString(self.jObj) ?: "";
     }
 
-    # The function that maps to the `equals` method of `java.lang.Object`.
+    # Checks if this object is equal to another object.
     #
-    # + arg0 - The `Object` value required to map with the Java method parameter.
-    # + return - The `boolean` value returning from the Java mapping.
-    public function 'equals(Object arg0) returns boolean {
-        return java_lang_Object_equals(self.jObj, arg0.jObj);
+    # Note: this delegates directly to Java's `equals` method on `Object`, which
+    # compares by reference identity unless the underlying Java class
+    # overrides it. Subclasses in this library (e.g. `LocalDate`,
+    # `LocalDateTime`, `LocalTime`) provide their own value-based equality
+    # instead of relying on this default behavior.
+    #
+    # + other - The object to compare against.
+    # + return - True if the two objects are equal, false otherwise.
+    public function isEquals(Object other) returns boolean {
+        return java_lang_Object_equals(self.jObj, other.jObj);
     }
 
-    # The function that maps to the `getClass` method of `java.lang.Object`.
+    # Returns the runtime class of this object.
     #
-    # + return - The `Class` value returning from the Java mapping.
+    # + return - The Class instance representing this object's runtime type.
     public function getClass() returns Class {
         handle externalObj = java_lang_Object_getClass(self.jObj);
         Class newObj = new (externalObj);
         return newObj;
     }
 
-    # The function that maps to the `hashCode` method of `java.lang.Object`.
+    # Returns the hash code value for this object.
     #
-    # + return - The `int` value returning from the Java mapping.
+    # + return - The hash code.
     public function hashCode() returns int {
         return java_lang_Object_hashCode(self.jObj);
     }
 
-    # The function that maps to the `notify` method of `java.lang.Object`.
+    # Wakes up a single thread that is waiting on this object's monitor.
+    #
+    # WARNING: This is a low-level Java synchronization method. Avoid using
+    # it in business logic.
     public function notify() {
         java_lang_Object_notify(self.jObj);
     }
 
-    # The function that maps to the `notifyAll` method of `java.lang.Object`.
+    # Wakes up all threads that are waiting on this object's monitor.
+    #
+    # WARNING: This is a low-level Java synchronization method. Avoid using
+    # it in business logic.
     public function notifyAll() {
         java_lang_Object_notifyAll(self.jObj);
     }
 
-    # The function that maps to the `wait` method of `java.lang.Object`.
+    # Causes the current thread to wait until notified.
     #
-    # + return - The `InterruptedException` value returning from the Java mapping.
-    public function 'wait() returns InterruptedException? {
+    # WARNING: Low-level Java synchronization method. Use with caution.
+    #
+    # + return - An InterruptedException if the thread is interrupted while waiting.
+    public function doWait() returns InterruptedException? {
         error|() externalObj = java_lang_Object_wait(self.jObj);
         if (externalObj is error) {
             InterruptedException e = error InterruptedException(INTERRUPTEDEXCEPTION, externalObj, message = externalObj.message());
@@ -68,25 +86,29 @@ public distinct class Object {
         }
     }
 
-    # The function that maps to the `wait` method of `java.lang.Object`.
+    # Causes the current thread to wait until notified or the specified time elapses.
     #
-    # + arg0 - The `int` value required to map with the Java method parameter.
-    # + return - The `InterruptedException` value returning from the Java mapping.
-    public function wait2(int arg0) returns InterruptedException? {
-        error|() externalObj = java_lang_Object_wait2(self.jObj, arg0);
+    # WARNING: Low-level Java synchronization method. Use with caution.
+    #
+    # + timeoutMillis - The maximum time to wait, in milliseconds.
+    # + return - An InterruptedException if the thread is interrupted while waiting.
+    public function waitWithTimeout(int timeoutMillis) returns InterruptedException? {
+        error|() externalObj = java_lang_Object_wait2(self.jObj, timeoutMillis);
         if (externalObj is error) {
             InterruptedException e = error InterruptedException(INTERRUPTEDEXCEPTION, externalObj, message = externalObj.message());
             return e;
         }
     }
 
-    # The function that maps to the `wait` method of `java.lang.Object`.
+    # Causes the current thread to wait until notified, with the specified timeout.
     #
-    # + arg0 - The `int` value required to map with the Java method parameter.
-    # + arg1 - The `int` value required to map with the Java method parameter.
-    # + return - The `InterruptedException` value returning from the Java mapping.
-    public function wait3(int arg0, int arg1) returns InterruptedException? {
-        error|() externalObj = java_lang_Object_wait3(self.jObj, arg0, arg1);
+    # WARNING: Low-level Java synchronization method. Use with caution.
+    #
+    # + timeoutMillis - The maximum time to wait, in milliseconds.
+    # + nanos - Additional nanoseconds to wait (0–999,999).
+    # + return - An InterruptedException if the thread is interrupted while waiting.
+    public function waitWithTimeoutAndNanos(int timeoutMillis, int nanos) returns InterruptedException? {
+        error|() externalObj = java_lang_Object_wait3(self.jObj, timeoutMillis, nanos);
         if (externalObj is error) {
             InterruptedException e = error InterruptedException(INTERRUPTEDEXCEPTION, externalObj, message = externalObj.message());
             return e;
@@ -95,10 +117,10 @@ public distinct class Object {
 
 }
 
-# The constructor function to generate an object of `java.lang.Object`.
+# Creates a new instance of `java.lang.Object`.
 #
-# + return - The new `Object` class generated.
-public function newObject1() returns Object {
+# + return - A new Object instance.
+public function createObject() returns Object {
     handle externalObj = java_lang_Object_newObject1();
     Object newObj = new (externalObj);
     return newObj;
