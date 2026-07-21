@@ -110,7 +110,7 @@ public distinct class LocalDate {
     # Returns a stream of dates from this date until the specified end date.
     # + endExclusive - The end date, exclusive.
     # + return - A stream of dates.
-    public function datesUntil(LocalDate endExclusive) returns Stream {
+    function datesUntil(LocalDate endExclusive) returns Stream {
         handle externalObj = java_time_LocalDate_datesUntil(self.jObj, endExclusive.jObj);
         return new (externalObj);
     }

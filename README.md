@@ -1,6 +1,6 @@
 # java_time_utils
 
-A Ballerina wrapper library around `java.time` — providing `LocalDate`, `LocalDateTime`, and `LocalTime` for working with dates and times without time zones.
+A Ballerina wrapper library around `java.time` — providing `LocalDate`, `LocalDateTime`, `LocalTime`, and `Period` for working with dates and times without time zones.
 
 > **Note on scope:** This library wraps only the members that are fully implemented. A few Java-side wrapper types (`Month`, `DayOfWeek`, `IsoEra`, `Chronology`, `IsoChronology`, `Class`) are declared as Java bindings internally but have no public members yet, so any method that would return or accept one of those types (e.g. `getMonth()`, `getDayOfWeek()`, `getEra()`, `getChronology()`, `getClass()`) is intentionally left out of this documentation and out of the public API for now.
 
@@ -33,6 +33,7 @@ import kruutteri1/java_time_utils as jt;
 - [LocalDate](#localdate)
 - [LocalDateTime](#localdatetime)
 - [LocalTime](#localtime)
+- [Period](#period)
 - [A Note on Method Naming](#a-note-on-method-naming)
 - [Error Handling](#error-handling)
 - [Inherited Java Object Methods](#inherited-java-object-methods)
@@ -270,22 +271,105 @@ public function main() {
 
 ---
 
+## Period
+
+A date-based amount of time in years, months, and days, such as "1 year, 2 months, and 3 days". Unlike `LocalDate`/`LocalDateTime`/`LocalTime`, a `Period` doesn't represent a point in time — it represents a *quantity* of time, and is most often produced by [`between`](#creating-a-period) or added to/subtracted from a `LocalDate`.
+
+> ⚠️ `Period` does not store weeks as a separate field. `ofPeriodWeeks(n)` is a convenience that internally stores `n * 7` as days — `getDays()` afterward returns the day count, not the week count.
+
+### Creating a Period
+
+- `ofPeriod(int years, int months, int days)` returns `Period`
+- `ofPeriodDays(int days)` returns `Period`
+- `ofPeriodMonths(int months)` returns `Period`
+- `ofPeriodYears(int years)` returns `Period`
+- `ofPeriodWeeks(int weeks)` returns `Period` — stored internally as `weeks * 7` days
+- `between(LocalDate startDateInclusive, LocalDate endDateExclusive)` returns `Period` — the years/months/days between two dates; negative if `endDateExclusive` is before `startDateInclusive`
+- `getZERO()` returns `Period` — a period of zero length
+
+```ballerina
+jt:Period p = jt:ofPeriod(1, 2, 3);
+jt:Period between = jt:between(jt:ofDate(2026, 1, 1), jt:ofDate(2026, 7, 15));
+```
+
+### Instance Methods
+
+**Output:** `toString()` returns `string` — ISO-8601 period format, e.g. `"P1Y2M3D"`
+
+**Component getters (no args, return int):** `getYears()`, `getMonths()`, `getDays()`
+
+**Comparison:** `isEquals(Object other)` returns `boolean` — returns false rather than panicking on a type mismatch. `hashCode()` also available (see Inherited Java Object Methods).
+
+**Checks:**
+- `isZero()` returns `boolean` — true only if years, months, **and** days are all `0`
+- `isNegative()` returns `boolean` — true if **any** of the three fields is negative, even if the others are positive
+
+**Arithmetic (immutable, returns new Period) — panics on `int32` overflow:**
+- Add: `plusYears`, `plusMonths`, `plusDays`
+- Subtract: `minusYears`, `minusMonths`, `minusDays`
+- `multipliedBy(int scalar)` — scales all three fields; panics on overflow
+- `negated()` — flips the sign of all three fields
+
+**Normalization:**
+- `normalized()` returns `Period` — carries excess months into years (e.g. 14 months → 1 year, 2 months). Does **not** touch the days field.
+
+**Converting to months:**
+- `toTotalMonths()` returns `int` — `years * 12 + months`, ignoring days. Uses `long` arithmetic internally, so unlike the other arithmetic methods this does **not** overflow at `int32` boundaries.
+
+**Altering fields (`with*`, replaces one field without touching the others):**
+`withYears(int years)`, `withMonths(int months)`, `withDays(int days)`
+
+### Period — Example
+
+```ballerina
+import ballerina/io;
+import kruutteri1/java_time_utils as jt;
+
+public function main() {
+    jt:LocalDate startDate = jt:ofDate(2026, 1, 1);
+    jt:LocalDate endDate = jt:ofDate(2026, 7, 15);
+    jt:Period p = jt:between(startDate, endDate);
+
+    io:println(p.toString());          // P0Y6M14D
+    io:println("Years: ", p.getYears());
+    io:println("Months: ", p.getMonths());
+    io:println("Days: ", p.getDays());
+
+    jt:Period doubled = p.multipliedBy(2);
+    io:println(doubled.toString());
+
+    jt:Period normalized = jt:ofPeriod(0, 14, 0).normalized();
+    io:println(normalized.toString()); // P1Y2M
+
+    // Safe arithmetic near int32 boundaries
+    jt:Period nearMax = jt:ofPeriodYears(2147483647);
+    jt:Period|error overflowed = trap nearMax.plusYears(1);
+    if overflowed is error {
+        io:println("Overflow rejected as expected: ", overflowed.message());
+    }
+}
+```
+
+---
+
 ## A Note on Method Naming
 
 Ballerina does not support method/function overloading, so this library's function names don't mirror `java.time` one-to-one:
 
-- **Creation functions carry a suffix indicating arity**, since Ballerina can't have multiple functions named `of` in the same module. `LocalDate` uses `ofDate(...)`; `LocalDateTime` uses `ofDateTime(...)` / `ofWithSeconds(...)` / `ofWithNanos(...)`; `LocalTime` uses `ofTime(...)` / `ofTimeWithSecond(...)` / `ofTimeWithSecondNano(...)`.
-- **`equals` is exposed as `isEquals`.** Ballerina reserves `equals` as a keyword-adjacent identifier; this library uses the plain, unescaped name `isEquals(Object other)` on all three types instead.
+- **Creation functions carry a suffix indicating arity**, since Ballerina can't have multiple functions named `of` in the same module. `LocalDate` uses `ofDate(...)`; `LocalDateTime` uses `ofDateTime(...)` / `ofWithSeconds(...)` / `ofWithNanos(...)`; `LocalTime` uses `ofTime(...)` / `ofTimeWithSecond(...)` / `ofTimeWithSecondNano(...)`; `Period` uses `ofPeriod(...)` / `ofPeriodDays(...)` / `ofPeriodMonths(...)` / `ofPeriodYears(...)` / `ofPeriodWeeks(...)`.
+- **`equals` is exposed as `isEquals`.** Ballerina reserves `equals` as a keyword-adjacent identifier; this library uses the plain, unescaped name `isEquals(Object other)` on all four types instead.
 - **`wait`/`wait2`/`wait3` are exposed as `doWait` / `waitWithTimeout` / `waitWithTimeoutAndNanos`** — same reasoning, see [Inherited Java Object Methods](#inherited-java-object-methods).
-- **`compareTo`, `isAfter`, `isBefore` are only public on `LocalTime`** — on `LocalDate` and `LocalDateTime` these exist internally but aren't part of the current public API.
+- **`compareTo`, `isAfter`, `isBefore` are only public on `LocalTime`** — on `LocalDate`, `LocalDateTime`, and `Period` these either don't apply or exist internally but aren't part of the current public API.
 
 ---
 
 ## Error Handling
 
-Functions and methods that validate their input — creation functions like `ofDate`, and any `with*` method — **panic** on an out-of-range value (e.g. month `13`, or February 30th). They return a plain `T`, not `T|error`; invalid input triggers a runtime panic from the underlying Java `DateTimeException`.
+Functions and methods that validate their input — creation functions like `ofDate`, and any `with*` method on `LocalDate`/`LocalDateTime`/`LocalTime` — **panic** on an out-of-range value (e.g. month `13`, or February 30th). They return a plain `T`, not `T|error`; invalid input triggers a runtime panic from the underlying Java `DateTimeException`.
 
-Use `trap` to convert the panic into a catchable `error`:
+`Period`'s arithmetic methods (`plus*`, `minus*`, `multipliedBy`) panic for a *different* reason — not invalid calendar values, but `int32` overflow in the underlying Java `ArithmeticException`, since `Period` has no calendar validation of its own.
+
+Either way, use `trap` to convert the panic into a catchable `error`:
 
 ```ballerina
 import ballerina/io;
@@ -304,13 +388,13 @@ public function main() {
 
 If you're confident the input is always valid (e.g. hardcoded constants), you can skip `trap` — but any dynamic or user-supplied input should go through this pattern to avoid an unhandled panic crashing your program.
 
-This applies uniformly to `LocalDate`, `LocalDateTime`, and `LocalTime`.
+This applies uniformly to `LocalDate`, `LocalDateTime`, `LocalTime`, and `Period`.
 
 ---
 
 ## Inherited Java Object Methods
 
-All three types inherit these from `java.lang.Object`, mainly for low-level thread synchronization — you almost certainly don't need them in ordinary business logic.
+All four types (`LocalDate`, `LocalDateTime`, `LocalTime`, `Period`) inherit these from `java.lang.Object`, mainly for low-level thread synchronization — you almost certainly don't need them in ordinary business logic.
 
 | Method | Parameters | Description |
 |---|---|---|
@@ -328,4 +412,4 @@ if err is jt:InterruptedException {
 }
 ```
 
-Available identically on `LocalDate`, `LocalDateTime`, and `LocalTime`.
+Available identically on `LocalDate`, `LocalDateTime`, `LocalTime`, and `Period`.
