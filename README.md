@@ -18,11 +18,11 @@ A Ballerina wrapper library around `java.time` — providing `LocalDate`, `Local
 [[dependency]]
 org = "kruutteri1"
 name = "java_time_utils"
-version = "1.0.3"  # check central.ballerina.io for the latest version
+version = "1.0.4"  # check central.ballerina.io for the latest version
 ```
 
 ```ballerina
-import kruutteri1/java_time_utils.javatime as jt;
+import kruutteri1/java_time_utils as jt;
 ```
 
 ---
@@ -43,7 +43,7 @@ import kruutteri1/java_time_utils.javatime as jt;
 
 ```ballerina
 import ballerina/io;
-import kruutteri1/java_time_utils.javatime as jt;
+import kruutteri1/java_time_utils as jt;
 
 public function main() {
     jt:LocalDate date = jt:ofDate(2026, 7, 15);
@@ -108,7 +108,7 @@ jt:LocalDate d = jt:ofDate(2026, 7, 15);
 
 ```ballerina
 import ballerina/io;
-import kruutteri1/java_time_utils.javatime as jt;
+import kruutteri1/java_time_utils as jt;
 
 public function main() {
     jt:LocalDate d = jt:ofDate(2026, 7, 15);
@@ -172,7 +172,7 @@ jt:LocalDateTime dt = jt:ofDateTime(2026, 7, 15, 14, 28);
 
 ```ballerina
 import ballerina/io;
-import kruutteri1/java_time_utils.javatime as jt;
+import kruutteri1/java_time_utils as jt;
 
 public function main() {
     jt:LocalDateTime dt = jt:ofDateTime(2026, 7, 15, 14, 28);
@@ -246,7 +246,7 @@ jt:LocalTime t = jt:ofTimeWithSecond(10, 15, 30);
 
 ```ballerina
 import ballerina/io;
-import kruutteri1/java_time_utils.javatime as jt;
+import kruutteri1/java_time_utils as jt;
 
 public function main() {
     jt:LocalTime t = jt:ofTimeWithSecond(10, 15, 30);
@@ -289,7 +289,7 @@ Use `trap` to convert the panic into a catchable `error`:
 
 ```ballerina
 import ballerina/io;
-import kruutteri1/java_time_utils.javatime as jt;
+import kruutteri1/java_time_utils as jt;
 
 public function main() {
     jt:LocalDate|error d = trap jt:ofDate(2026, 2, 30);
