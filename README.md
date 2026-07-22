@@ -18,7 +18,7 @@ A Ballerina wrapper library around `java.time` — providing `LocalDate`, `Local
 [[dependency]]
 org = "kruutteri1"
 name = "java_time_utils"
-version = "1.0.4"  # check central.ballerina.io for the latest version
+version = "1.0.5"  # check central.ballerina.io for the latest version
 ```
 
 ```ballerina
@@ -67,6 +67,7 @@ A date without a time-of-day or time zone component, such as `2026-07-15`.
 
 - `getCurrentDate()` returns `LocalDate` — current date from the system clock
 - `ofDate(int year, int month, int day)` returns `LocalDate` — panics on invalid input
+- `ofMonth(int year, Month month, int day)` returns `LocalDate` — using the Month enum, panics on invalid input
 - `ofEpochDay(int epochDay)` returns `LocalDate`
 - `ofYearDay(int year, int dayOfYear)` returns `LocalDate` — panics if dayOfYear exceeds the year length
 - `getMINDate()` returns `LocalDate` — minimum supported date
@@ -143,6 +144,8 @@ A date and time without a time zone, such as `2026-07-15T14:28:19`.
 - `ofDateTime(int year, int month, int dayOfMonth, int hour, int minute)` returns `LocalDateTime`
 - `ofWithSeconds(int year, int month, int dayOfMonth, int hour, int minute, int second)` returns `LocalDateTime`
 - `ofWithNanos(int year, int month, int dayOfMonth, int hour, int minute, int second, int nanoOfSecond)` returns `LocalDateTime`
+- `ofMonthFullWithsecond(int year, Month month, int dayOfMonth, int hour, int minute, int second)` returns `LocalDateTime` — using the Month enum
+- `ofMonthFullWithNano(int year, Month month, int dayOfMonth, int hour, int minute, int second, int nanoOfSecond)` returns `LocalDateTime` — using the Month enum and nanoseconds
 - `ofLocalDateWithLocalTime(LocalDate date, LocalTime time)` returns `LocalDateTime` — never panics, both inputs already validated
 - `getMINDateTime()` returns `LocalDateTime`
 - `getMAXDateTime()` returns `LocalDateTime`

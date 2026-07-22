@@ -147,7 +147,7 @@ public distinct class LocalDate {
 
     # Returns the chronology of this date.
     # + return - The ISO chronology.
-    public function getChronology() returns IsoChronology {
+    function getChronology() returns IsoChronology {
         handle externalObj = java_time_LocalDate_getChronology(self.jObj);
         return new (externalObj);
     }
@@ -588,9 +588,9 @@ function WithZone(ZoneId zone) returns LocalDate {
 # + year - The year.
 # + month - The month-of-year (1-12).
 # + day - The day-of-month (1-31).
-# + return - The LocalDate.
-public function ofDate(int year, int month, int day) returns LocalDate {
-    handle externalObj = java_time_LocalDate_of(year, month, day);
+# + return - LocalDate|error — the constructed date, or an error if the date is invalid.
+public function ofDate(int year, int month, int day) returns LocalDate|error {
+    handle externalObj = check trap java_time_LocalDate_of(year, month, day);
     LocalDate newObj = new (externalObj);
     return newObj;
 }
@@ -600,9 +600,9 @@ public function ofDate(int year, int month, int day) returns LocalDate {
 # + year - The year.
 # + month - The month enum.
 # + day - The day-of-month (1-31).
-# + return - The LocalDate.
-public function ofMonth(int year, Month month, int day) returns LocalDate {
-    handle externalObj = java_time_LocalDate_of2(year, month.jObj, day);
+# + return - LocalDate|error — the constructed date, or an error if the date is invalid.
+public function ofMonth(int year, Month month, int day) returns LocalDate|error {
+    handle externalObj = check trap java_time_LocalDate_of2(year, month.jObj, day);
     LocalDate newObj = new (externalObj);
     return newObj;
 }
@@ -610,9 +610,9 @@ public function ofMonth(int year, Month month, int day) returns LocalDate {
 # Obtains a LocalDate from the epoch day count.
 #
 # + epochDay - The number of days from the epoch of 1970-01-01.
-# + return - The LocalDate.
-public function ofEpochDay(int epochDay) returns LocalDate {
-    handle externalObj = java_time_LocalDate_ofEpochDay(epochDay);
+# + return - LocalDate|error — the constructed date, or an error if the resulting date is outside the supported range.
+public function ofEpochDay(int epochDay) returns LocalDate|error {
+    handle externalObj = check trap java_time_LocalDate_ofEpochDay(epochDay);
     LocalDate newObj = new (externalObj);
     return newObj;
 }
@@ -632,9 +632,9 @@ function ofInstant(Instant instant, ZoneId zone) returns LocalDate {
 #
 # + year - The year to represent.
 # + dayOfYear - The day-of-year to represent (1-366).
-# + return - The LocalDate.
-public function ofYearDay(int year, int dayOfYear) returns LocalDate {
-    handle externalObj = java_time_LocalDate_ofYearDay(year, dayOfYear);
+# + return - LocalDate|error — the constructed date, or an error if dayOfYear exceeds the length of the year.
+public function ofYearDay(int year, int dayOfYear) returns LocalDate|error {
+    handle externalObj = check trap java_time_LocalDate_ofYearDay(year, dayOfYear);
     LocalDate newObj = new (externalObj);
     return newObj;
 }
@@ -663,7 +663,7 @@ function parseWithFormatter(CharSequence text, DateTimeFormatter formatter) retu
 # Returns the minimum supported LocalDate (year -999999999-01-01).
 #
 # + return - The MIN constant.
-public function getMINDate() returns LocalDate {
+public function getMinDate() returns LocalDate {
     handle externalObj = java_time_LocalDate_getMIN();
     LocalDate newObj = new (externalObj);
     return newObj;
@@ -672,7 +672,7 @@ public function getMINDate() returns LocalDate {
 # Returns the maximum supported LocalDate (year 999999999-12-31).
 #
 # + return - The MAX constant.
-public function getMAXDate() returns LocalDate {
+public function getMaxDate() returns LocalDate {
     handle externalObj = java_time_LocalDate_getMAX();
     LocalDate newObj = new (externalObj);
     return newObj;
@@ -681,7 +681,7 @@ public function getMAXDate() returns LocalDate {
 # Returns the epoch date (1970-01-01).
 #
 # + return - The EPOCH constant.
-public function getEPOCHDate() returns LocalDate {
+public function getEpochDate() returns LocalDate {
     handle externalObj = java_time_LocalDate_getEPOCH();
     LocalDate newObj = new (externalObj);
     return newObj;
@@ -957,19 +957,19 @@ function java_time_LocalDate_now3(handle arg0) returns handle = @java:Method {
     paramTypes: ["java.time.ZoneId"]
 } external;
 
-function java_time_LocalDate_of(int arg0, int arg1, int arg2) returns handle = @java:Method {
+function java_time_LocalDate_of(int arg0, int arg1, int arg2) returns handle|error = @java:Method {
     name: "of",
     'class: "java.time.LocalDate",
     paramTypes: ["int", "int", "int"]
 } external;
 
-function java_time_LocalDate_of2(int arg0, handle arg1, int arg2) returns handle = @java:Method {
+function java_time_LocalDate_of2(int arg0, handle arg1, int arg2) returns handle|error = @java:Method {
     name: "of",
     'class: "java.time.LocalDate",
     paramTypes: ["int", "java.time.Month", "int"]
 } external;
 
-function java_time_LocalDate_ofEpochDay(int arg0) returns handle = @java:Method {
+function java_time_LocalDate_ofEpochDay(int arg0) returns handle|error = @java:Method {
     name: "ofEpochDay",
     'class: "java.time.LocalDate",
     paramTypes: ["long"]
@@ -981,7 +981,7 @@ function java_time_LocalDate_ofInstant(handle arg0, handle arg1) returns handle 
     paramTypes: ["java.time.Instant", "java.time.ZoneId"]
 } external;
 
-function java_time_LocalDate_ofYearDay(int arg0, int arg1) returns handle = @java:Method {
+function java_time_LocalDate_ofYearDay(int arg0, int arg1) returns handle|error = @java:Method {
     name: "ofYearDay",
     'class: "java.time.LocalDate",
     paramTypes: ["int", "int"]

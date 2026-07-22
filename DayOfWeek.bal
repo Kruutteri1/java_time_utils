@@ -262,9 +262,9 @@ function DayOfWeek_from(TemporalAccessor temporalAccessor) returns DayOfWeek {
 # Creates a DayOfWeek from an ISO-8601 numeric value.
 #
 # + dayOfWeek - The day-of-week value, from 1 (MONDAY) to 7 (SUNDAY).
-# + return - The corresponding DayOfWeek. Panics if the value is out of range.
-public function ofDay(int dayOfWeek) returns DayOfWeek {
-    handle externalObj = java_time_DayOfWeek_of(dayOfWeek);
+# + return - DayOfWeek|error — the corresponding DayOfWeek, or an error if the value is out of range.
+public function ofDay(int dayOfWeek) returns DayOfWeek|error {
+    handle externalObj = check trap java_time_DayOfWeek_of(dayOfWeek);
     DayOfWeek newObj = new (externalObj);
     return newObj;
 }
@@ -274,9 +274,9 @@ public function ofDay(int dayOfWeek) returns DayOfWeek {
 #
 # + enumClass - The Class object of the enum type.
 # + name - The name of the constant to return.
-# + return - The enum constant with the specified name.
-public function valueOf(Class enumClass, string name) returns Enum {
-    handle externalObj = java_time_DayOfWeek_valueOf(enumClass.jObj, java:fromString(name));
+# + return - Enum|error — the enum constant, or an error if no constant with the given name exists.
+public function valueOf(Class enumClass, string name) returns Enum|error {
+    handle externalObj = check trap java_time_DayOfWeek_valueOf(enumClass.jObj, java:fromString(name));
     Enum newObj = new (externalObj);
     return newObj;
 }
@@ -285,20 +285,20 @@ public function valueOf(Class enumClass, string name) returns Enum {
 # Panics if no constant with that name exists.
 #
 # + name - The name of the constant to return.
-# + return - The corresponding DayOfWeek.
-public function valueOfDayName(string name) returns DayOfWeek {
-    handle externalObj = java_time_DayOfWeek_valueOf2(java:fromString(name));
+# + return - DayOfWeek|error — the corresponding DayOfWeek, or an error if no constant with that name exists.
+public function valueOfDayName(string name) returns DayOfWeek|error {
+    handle externalObj = check trap java_time_DayOfWeek_valueOf2(java:fromString(name));
     DayOfWeek newObj = new (externalObj);
     return newObj;
 }
 
 # Returns all seven DayOfWeek constants, in declaration order (MONDAY first).
 #
-# + return - An array of all DayOfWeek constants.
+# + return - DayOfWeek[]|error — an array of all seven DayOfWeek constants, or an error if the underlying Java array conversion fails.
 public function getWeekValues() returns DayOfWeek[]|error {
     handle externalObj = java_time_DayOfWeek_values();
     DayOfWeek[] newObj = [];
-    handle[] anyObj = <handle[]>check jarrays:fromHandle(externalObj, "handle");
+    handle[] anyObj = <handle[]>check trap jarrays:fromHandle(externalObj, "handle");
     int count = anyObj.length();
     foreach int i in 0 ... count - 1 {
         DayOfWeek element = new (anyObj[i]);
@@ -309,7 +309,7 @@ public function getWeekValues() returns DayOfWeek[]|error {
 
 # Returns the constant for Monday.
 # + return - The MONDAY constant.
-public function getMONDAY() returns DayOfWeek {
+public function getMonday() returns DayOfWeek {
     handle externalObj = java_time_DayOfWeek_getMONDAY();
     DayOfWeek newObj = new (externalObj);
     return newObj;
@@ -317,7 +317,7 @@ public function getMONDAY() returns DayOfWeek {
 
 # Returns the constant for Tuesday.
 # + return - The TUESDAY constant.
-public function getTUESDAY() returns DayOfWeek {
+public function getTuesday() returns DayOfWeek {
     handle externalObj = java_time_DayOfWeek_getTUESDAY();
     DayOfWeek newObj = new (externalObj);
     return newObj;
@@ -325,7 +325,7 @@ public function getTUESDAY() returns DayOfWeek {
 
 # Returns the constant for Wednesday.
 # + return - The WEDNESDAY constant.
-public function getWEDNESDAY() returns DayOfWeek {
+public function getWednesday() returns DayOfWeek {
     handle externalObj = java_time_DayOfWeek_getWEDNESDAY();
     DayOfWeek newObj = new (externalObj);
     return newObj;
@@ -333,7 +333,7 @@ public function getWEDNESDAY() returns DayOfWeek {
 
 # Returns the constant for Thursday.
 # + return - The THURSDAY constant.
-public function getTHURSDAY() returns DayOfWeek {
+public function getThursday() returns DayOfWeek {
     handle externalObj = java_time_DayOfWeek_getTHURSDAY();
     DayOfWeek newObj = new (externalObj);
     return newObj;
@@ -341,7 +341,7 @@ public function getTHURSDAY() returns DayOfWeek {
 
 # Returns the constant for Friday.
 # + return - The FRIDAY constant.
-public function getFRIDAY() returns DayOfWeek {
+public function getFriday() returns DayOfWeek {
     handle externalObj = java_time_DayOfWeek_getFRIDAY();
     DayOfWeek newObj = new (externalObj);
     return newObj;
@@ -349,7 +349,7 @@ public function getFRIDAY() returns DayOfWeek {
 
 # Returns the constant for Saturday.
 # + return - The SATURDAY constant.
-public function getSATURDAY() returns DayOfWeek {
+public function getSaturday() returns DayOfWeek {
     handle externalObj = java_time_DayOfWeek_getSATURDAY();
     DayOfWeek newObj = new (externalObj);
     return newObj;
@@ -357,7 +357,7 @@ public function getSATURDAY() returns DayOfWeek {
 
 # Returns the constant for Sunday.
 # + return - The SUNDAY constant.
-public function getSUNDAY() returns DayOfWeek {
+public function getSunday() returns DayOfWeek {
     handle externalObj = java_time_DayOfWeek_getSUNDAY();
     DayOfWeek newObj = new (externalObj);
     return newObj;
@@ -465,7 +465,7 @@ function java_time_DayOfWeek_notifyAll(handle receiver) = @java:Method {
     paramTypes: []
 } external;
 
-function java_time_DayOfWeek_of(int arg0) returns handle = @java:Method {
+function java_time_DayOfWeek_of(int arg0) returns handle|error = @java:Method {
     name: "of",
     'class: "java.time.DayOfWeek",
     paramTypes: ["int"]
@@ -495,13 +495,13 @@ function java_time_DayOfWeek_range(handle receiver, handle arg0) returns handle 
     paramTypes: ["java.time.temporal.TemporalField"]
 } external;
 
-function java_time_DayOfWeek_valueOf(handle arg0, handle arg1) returns handle = @java:Method {
+function java_time_DayOfWeek_valueOf(handle arg0, handle arg1) returns handle|error = @java:Method {
     name: "valueOf",
     'class: "java.time.DayOfWeek",
     paramTypes: ["java.lang.Class", "java.lang.String"]
 } external;
 
-function java_time_DayOfWeek_valueOf2(handle arg0) returns handle = @java:Method {
+function java_time_DayOfWeek_valueOf2(handle arg0) returns handle|error = @java:Method {
     name: "valueOf",
     'class: "java.time.DayOfWeek",
     paramTypes: ["java.lang.String"]

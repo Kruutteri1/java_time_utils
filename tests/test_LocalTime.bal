@@ -6,7 +6,7 @@ import ballerina/test;
 
 @test:Config {}
 function testCreationWithNano() {
-    LocalTime t = ofTimeWithSecondNano(10, 15, 30, 500000000);
+    LocalTime t = checkpanic ofTimeWithSecondNano(10, 15, 30, 500000000);
     test:assertEquals(t.getHour(), 10);
     test:assertEquals(t.getMinute(), 15);
     test:assertEquals(t.getSecond(), 30);
@@ -15,27 +15,27 @@ function testCreationWithNano() {
 
 @test:Config {}
 function testOfNanoOfDayZero() {
-    LocalTime t = ofNanoOfDay(0);
+    LocalTime t = checkpanic ofNanoOfDay(0);
     test:assertEquals(t.toString(), "00:00", "0 nanos of day should be 00:00");
 }
 
 @test:Config {}
 function testOfNanoOfDayNonZero() {
     // 1 hour = 3600 seconds = 3,600,000,000,000 nanoseconds
-    LocalTime t = ofNanoOfDay(3600000000000);
+    LocalTime t = checkpanic ofNanoOfDay(3600000000000);
     test:assertEquals(t.getHour(), 1);
     test:assertEquals(t.getMinute(), 0);
 }
 
 @test:Config {}
 function testOfSecondOfDayZero() {
-    LocalTime t = ofSecondOfDay(0);
+    LocalTime t = checkpanic ofSecondOfDay(0);
     test:assertEquals(t.toString(), "00:00");
 }
 
 @test:Config {}
 function testOfSecondOfDayOneHour() {
-    LocalTime t = ofSecondOfDay(3600);
+    LocalTime t = checkpanic ofSecondOfDay(3600);
     test:assertEquals(t.getHour(), 1, "3600 seconds of day should be 01:00");
     test:assertEquals(t.getMinute(), 0);
 }
@@ -43,7 +43,7 @@ function testOfSecondOfDayOneHour() {
 @test:Config {}
 function testOfSecondOfDayComplex() {
     // 10:15:30 = 10*3600 + 15*60 + 30 = 36930 seconds
-    LocalTime t = ofSecondOfDay(36930);
+    LocalTime t = checkpanic ofSecondOfDay(36930);
     test:assertEquals(t.getHour(), 10);
     test:assertEquals(t.getMinute(), 15);
     test:assertEquals(t.getSecond(), 30);
@@ -51,7 +51,7 @@ function testOfSecondOfDayComplex() {
 
 @test:Config {}
 function testConstantsMax_LocalTime() {
-    LocalTime max = getMAXTime();
+    LocalTime max = getMaxTime();
     test:assertEquals(max.getHour(), 23, "MAX should have hour 23");
     test:assertEquals(max.getMinute(), 59);
     test:assertEquals(max.getSecond(), 59);
@@ -60,14 +60,14 @@ function testConstantsMax_LocalTime() {
 
 @test:Config {}
 function testConstantsNoon() {
-    LocalTime noon = getNOON();
+    LocalTime noon = getNoon();
     test:assertEquals(noon.toString(), "12:00", "NOON should be 12:00");
 }
 
 @test:Config {}
 function testConstantsMidnightEqualsMin() {
     LocalTime min = getMinTime();
-    LocalTime midnight = getMIDNIGHT();
+    LocalTime midnight = getMidnigth();
     test:assertTrue(min.isEquals(midnight), "MIN and MIDNIGHT should be equal");
     test:assertEquals(min.toString(), midnight.toString());
 }
@@ -78,20 +78,20 @@ function testConstantsMidnightEqualsMin() {
 
 @test:Config {}
 function testToStringFormat_LocalTime() {
-    LocalTime t = ofTimeWithSecond(9, 5, 3);
+    LocalTime t = checkpanic ofTimeWithSecond(9, 5, 3);
     test:assertEquals(t.toString(), "09:05:03", "String representation should be in ISO format");
 }
 
 @test:Config {}
 function testGetNano_LocalTime() {
-    LocalTime t = ofTimeWithSecondNano(0, 0, 0, 123456789);
+    LocalTime t = checkpanic ofTimeWithSecondNano(0, 0, 0, 123456789);
     test:assertEquals(t.getNano(), 123456789);
 }
 
 @test:Config {}
 function testHashCodeConsistency_LocalTime() {
-    LocalTime t1 = ofTimeWithSecond(10, 15, 30);
-    LocalTime t2 = ofTimeWithSecond(10, 15, 30);
+    LocalTime t1 = checkpanic ofTimeWithSecond(10, 15, 30);
+    LocalTime t2 = checkpanic ofTimeWithSecond(10, 15, 30);
     test:assertEquals(t1.hashCode(), t2.hashCode(), "Hash codes of equal values should match");
 }
 
@@ -107,43 +107,43 @@ function testGetClassNotNull() {
 
 @test:Config {}
 function testEqualsFalseForDifferentTimes() {
-    LocalTime t1 = ofTime(10, 0);
-    LocalTime t2 = ofTime(11, 0);
+    LocalTime t1 = checkpanic ofTime(10, 0);
+    LocalTime t2 = checkpanic ofTime(11, 0);
     test:assertFalse(t1.isEquals(t2), "Different times should not be equal");
 }
 
 @test:Config {}
 function testEqualsTrueForSameValues_LocalTime() {
-    LocalTime t1 = ofTimeWithSecond(10, 15, 30);
-    LocalTime t2 = ofTimeWithSecond(10, 15, 30);
+    LocalTime t1 = checkpanic ofTimeWithSecond(10, 15, 30);
+    LocalTime t2 = checkpanic ofTimeWithSecond(10, 15, 30);
     test:assertTrue(t1.isEquals(t2), "Identical time values should be equal");
 }
 
 @test:Config {}
 function testCompareToEqual() {
-    LocalTime t1 = ofTime(10, 0);
-    LocalTime t2 = ofTime(10, 0);
+    LocalTime t1 = checkpanic ofTime(10, 0);
+    LocalTime t2 = checkpanic ofTime(10, 0);
     test:assertEquals(t1.compareTo(t2), 0, "Equal times should compare as 0");
 }
 
 @test:Config {}
 function testCompareToGreater() {
-    LocalTime t1 = ofTime(11, 0);
-    LocalTime t2 = ofTime(10, 0);
+    LocalTime t1 = checkpanic ofTime(11, 0);
+    LocalTime t2 = checkpanic ofTime(10, 0);
     test:assertEquals(t1.compareTo(t2), 1, "11:00 should be greater than 10:00");
 }
 
 @test:Config {}
 function testIsAfterFalseWhenEqual() {
-    LocalTime t1 = ofTime(10, 0);
-    LocalTime t2 = ofTime(10, 0);
+    LocalTime t1 = checkpanic ofTime(10, 0);
+    LocalTime t2 = checkpanic ofTime(10, 0);
     test:assertFalse(t1.isAfter(t2), "A time cannot be 'after' itself");
 }
 
 @test:Config {}
 function testIsBeforeFalseWhenEqual() {
-    LocalTime t1 = ofTime(10, 0);
-    LocalTime t2 = ofTime(10, 0);
+    LocalTime t1 = checkpanic ofTime(10, 0);
+    LocalTime t2 = checkpanic ofTime(10, 0);
     test:assertFalse(t1.isBefore(t2), "A time cannot be 'before' itself");
 }
 
@@ -153,8 +153,8 @@ function testIsBeforeFalseWhenEqual() {
 
 @test:Config {}
 function testAtDateProducesCorrectDateTime() {
-    LocalTime t = ofTimeWithSecond(14, 28, 19);
-    LocalDate d = ofDate(2026, 1, 1);
+    LocalTime t = checkpanic ofTimeWithSecond(14, 28, 19);
+    LocalDate d = checkpanic ofDate(2026, 1, 1);
     LocalDateTime dt = t.atDate(d);
 
     test:assertEquals(dt.toString(), "2026-01-01T14:28:19");
@@ -166,34 +166,25 @@ function testAtDateProducesCorrectDateTime() {
 
 @test:Config {}
 function testToSecondOfDayMidnight() {
-    LocalTime t = getMIDNIGHT();
+    LocalTime t = getMidnigth();
     test:assertEquals(t.toSecondOfDay(), 0);
+    test:assertEquals(t.toNanoOfDay(), 0);
 }
 
 @test:Config {}
 function testToSecondOfDayValue() {
     // 01:00:00 = 3600 seconds of day
-    LocalTime t = ofTimeWithSecond(1, 0, 0);
+    LocalTime t = checkpanic ofTimeWithSecond(1, 0, 0);
     test:assertEquals(t.toSecondOfDay(), 3600);
-}
-
-@test:Config {}
-function testToNanoOfDayMidnight() {
-    LocalTime t = getMIDNIGHT();
-    test:assertEquals(t.toNanoOfDay(), 0);
-}
-
-@test:Config {}
-function testToNanoOfDayValue() {
-    LocalTime t = ofTimeWithSecond(1, 0, 0);
     test:assertEquals(t.toNanoOfDay(), 3600000000000);
+
 }
 
 @test:Config {}
 function testSecondOfDayRoundTrip() {
     // ofSecondOfDay and toSecondOfDay should be inverse operations
     int seconds = 45000;
-    LocalTime t = ofSecondOfDay(seconds);
+    LocalTime t = checkpanic ofSecondOfDay(seconds);
     test:assertEquals(t.toSecondOfDay(), seconds, "Round-tripping seconds of day should yield the same value");
 }
 
@@ -203,7 +194,7 @@ function testSecondOfDayRoundTrip() {
 
 @test:Config {}
 function testPlusMinutesWraparound() {
-    LocalTime t = ofTime(23, 55);
+    LocalTime t = checkpanic ofTime(23, 55);
     LocalTime next = t.plusMinutes(10);
     test:assertEquals(next.getHour(), 0, "23:55 + 10 minutes should roll over to the next day: 00:05");
     test:assertEquals(next.getMinute(), 5);
@@ -211,7 +202,7 @@ function testPlusMinutesWraparound() {
 
 @test:Config {}
 function testPlusSeconds_LocalTime() {
-    LocalTime t = ofTimeWithSecond(10, 0, 50);
+    LocalTime t = checkpanic ofTimeWithSecond(10, 0, 50);
     LocalTime next = t.plusSeconds(20);
     test:assertEquals(next.getMinute(), 1, "10:00:50 + 20 seconds = 10:01:10");
     test:assertEquals(next.getSecond(), 10);
@@ -219,7 +210,7 @@ function testPlusSeconds_LocalTime() {
 
 @test:Config {}
 function testPlusNanos_LocalTime() {
-    LocalTime t = ofTimeWithSecondNano(0, 0, 0, 900000000);
+    LocalTime t = checkpanic ofTimeWithSecondNano(0, 0, 0, 900000000);
     LocalTime next = t.plusNanos(200000000);
     test:assertEquals(next.getSecond(), 1, "900ms + 200ms should roll over into the next second");
     test:assertEquals(next.getNano(), 100000000);
@@ -231,14 +222,14 @@ function testPlusNanos_LocalTime() {
 
 @test:Config {}
 function testMinusHoursWraparound() {
-    LocalTime t = ofTime(1, 0);
+    LocalTime t = checkpanic ofTime(1, 0);
     LocalTime prev = t.minusHours(2);
     test:assertEquals(prev.getHour(), 23, "01:00 - 2 hours should roll back to the previous day: 23:00");
 }
 
 @test:Config {}
 function testMinusSeconds_LocalTime() {
-    LocalTime t = ofTimeWithSecond(10, 1, 10);
+    LocalTime t = checkpanic ofTimeWithSecond(10, 1, 10);
     LocalTime prev = t.minusSeconds(20);
     test:assertEquals(prev.getMinute(), 0, "10:01:10 - 20 seconds = 10:00:50");
     test:assertEquals(prev.getSecond(), 50);
@@ -246,7 +237,7 @@ function testMinusSeconds_LocalTime() {
 
 @test:Config {}
 function testMinusNanos_LocalTime() {
-    LocalTime t = ofTimeWithSecondNano(0, 0, 1, 100000000);
+    LocalTime t = checkpanic ofTimeWithSecondNano(0, 0, 1, 100000000);
     LocalTime prev = t.minusNanos(200000000);
     test:assertEquals(prev.getSecond(), 0, "1s 100ms - 200ms should roll back into the previous second");
     test:assertEquals(prev.getNano(), 900000000);
@@ -258,7 +249,7 @@ function testMinusNanos_LocalTime() {
 
 @test:Config {}
 function testWithSecond_LocalTime() {
-    LocalTime t = ofTimeWithSecond(10, 15, 30);
+    LocalTime t = checkpanic ofTimeWithSecond(10, 15, 30);
     LocalTime changed = t.withSecond(0);
     test:assertEquals(changed.getSecond(), 0);
     // Other fields should remain unchanged
@@ -268,14 +259,14 @@ function testWithSecond_LocalTime() {
 
 @test:Config {}
 function testWithNano_LocalTime() {
-    LocalTime t = ofTimeWithSecond(10, 15, 30);
+    LocalTime t = checkpanic ofTimeWithSecond(10, 15, 30);
     LocalTime changed = t.withNano(500000000);
     test:assertEquals(changed.getNano(), 500000000);
 }
 
 @test:Config {}
 function testWithMethodsChainImmutability_LocalTime() {
-    LocalTime original = ofTimeWithSecond(10, 15, 30);
+    LocalTime original = checkpanic ofTimeWithSecond(10, 15, 30);
     LocalTime _ = original.withHour(0).withMinute(0).withSecond(0).withNano(0);
 
     // The original object should remain unchanged
@@ -290,7 +281,7 @@ function testWithMethodsChainImmutability_LocalTime() {
 
 @test:Config {}
 function testComplexScenario_LocalTime() {
-    LocalTime t = ofTimeWithSecond(22, 30, 0);
+    LocalTime t = checkpanic ofTimeWithSecond(22, 30, 0);
     LocalTime result = t.plusHours(3).minusMinutes(15);
 
     // 22:30 + 3h = 01:30 (next day) - 15 minutes = 01:15
@@ -342,14 +333,14 @@ function testInvalidSecondOfDayThrows() {
 
 @test:Config {}
 function testWithInvalidHourThrows_() {
-    LocalTime t = ofTime(10, 0);
+    LocalTime t = checkpanic ofTime(10, 0);
     LocalTime|error result = trap t.withHour(25);
     test:assertTrue(result is error);
 }
 
 @test:Config {}
 function testWithInvalidMinuteThrows() {
-    LocalTime t = ofTime(10, 0);
+    LocalTime t = checkpanic ofTime(10, 0);
     LocalTime|error result = trap t.withMinute(60);
     test:assertTrue(result is error);
 }

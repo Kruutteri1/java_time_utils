@@ -408,7 +408,7 @@ function Period_parse(CharSequence text) returns Period {
 # Retrieves the constant for a period of zero.
 #
 # + return - A period of zero.
-public function getZERO() returns Period {
+public function getZero() returns Period {
     handle externalObj = java_time_Period_getZERO();
     Period newObj = new (externalObj);
     return newObj;

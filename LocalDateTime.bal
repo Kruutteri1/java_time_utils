@@ -601,9 +601,9 @@ function LocalDateTime_nowWithZone(ZoneId zone) returns LocalDateTime {
 # + dayOfMonth - The day-of-month to represent (1-31).
 # + hour - The hour-of-day to represent (0-23).
 # + minute - The minute-of-hour to represent (0-59).
-# + return - The LocalDateTime.
-public function ofDateTime(int year, int month, int dayOfMonth, int hour, int minute) returns LocalDateTime {
-    handle externalObj = java_time_LocalDateTime_of(year, month, dayOfMonth, hour, minute);
+# + return - LocalDateTime|error — the constructed date-time, or an error if the date-time is invalid.
+public function ofDateTime(int year, int month, int dayOfMonth, int hour, int minute) returns LocalDateTime|error {
+    handle externalObj = check trap java_time_LocalDateTime_of(year, month, dayOfMonth, hour, minute);
     return new (externalObj);
 }
 
@@ -615,9 +615,9 @@ public function ofDateTime(int year, int month, int dayOfMonth, int hour, int mi
 # + hour - The hour-of-day to represent (0-23).
 # + minute - The minute-of-hour to represent (0-59).
 # + second - The second-of-minute to represent (0-59).
-# + return - The LocalDateTime.
-public function ofWithSeconds(int year, int month, int dayOfMonth, int hour, int minute, int second) returns LocalDateTime {
-    handle externalObj = java_time_LocalDateTime_of2(year, month, dayOfMonth, hour, minute, second);
+# + return - LocalDateTime|error — the constructed date-time, or an error if the date-time is invalid.
+public function ofWithSeconds(int year, int month, int dayOfMonth, int hour, int minute, int second) returns LocalDateTime|error {
+    handle externalObj = check trap java_time_LocalDateTime_of2(year, month, dayOfMonth, hour, minute, second);
     return new (externalObj);
 }
 
@@ -630,9 +630,9 @@ public function ofWithSeconds(int year, int month, int dayOfMonth, int hour, int
 # + minute - The minute-of-hour to represent (0-59).
 # + second - The second-of-minute to represent (0-59).
 # + nanoOfSecond - The nano-of-second to represent (0-999,999,999).
-# + return - The LocalDateTime.
-public function ofWithNanos(int year, int month, int dayOfMonth, int hour, int minute, int second, int nanoOfSecond) returns LocalDateTime {
-    handle externalObj = java_time_LocalDateTime_of3(year, month, dayOfMonth, hour, minute, second, nanoOfSecond);
+# + return - LocalDateTime|error — the constructed date-time, or an error if the date-time is invalid.
+public function ofWithNanos(int year, int month, int dayOfMonth, int hour, int minute, int second, int nanoOfSecond) returns LocalDateTime|error {
+    handle externalObj = check trap java_time_LocalDateTime_of3(year, month, dayOfMonth, hour, minute, second, nanoOfSecond);
     return new (externalObj);
 }
 
@@ -643,9 +643,9 @@ public function ofWithNanos(int year, int month, int dayOfMonth, int hour, int m
 # + dayOfMonth - The day-of-month to represent (1-31).
 # + hour - The hour-of-day to represent (0-23).
 # + minute - The minute-of-hour to represent (0-59).
-# + return - The LocalDateTime.
-public function ofMonthFull(int year, Month month, int dayOfMonth, int hour, int minute) returns LocalDateTime {
-    handle externalObj = java_time_LocalDateTime_of4(year, month.jObj, dayOfMonth, hour, minute);
+# + return - LocalDateTime|error — the constructed date-time, or an error if the date-time is invalid.
+public function ofMonthFull(int year, Month month, int dayOfMonth, int hour, int minute) returns LocalDateTime|error {
+    handle externalObj = check trap java_time_LocalDateTime_of4(year, month.jObj, dayOfMonth, hour, minute);
     return new (externalObj);
 }
 
@@ -657,9 +657,9 @@ public function ofMonthFull(int year, Month month, int dayOfMonth, int hour, int
 # + hour - The hour-of-day to represent (0-23).
 # + minute - The minute-of-hour to represent (0-59).
 # + second - The second-of-minute to represent (0-59).
-# + return - The LocalDateTime.
-public function ofMonthFullWithsecond(int year, Month month, int dayOfMonth, int hour, int minute, int second) returns LocalDateTime {
-    handle externalObj = java_time_LocalDateTime_of5(year, month.jObj, dayOfMonth, hour, minute, second);
+# + return - LocalDateTime|error — the constructed date-time, or an error if the date-time is invalid.
+public function ofMonthFullWithsecond(int year, Month month, int dayOfMonth, int hour, int minute, int second) returns LocalDateTime|error {
+    handle externalObj = check trap java_time_LocalDateTime_of5(year, month.jObj, dayOfMonth, hour, minute, second);
     return new (externalObj);
 }
 
@@ -672,9 +672,9 @@ public function ofMonthFullWithsecond(int year, Month month, int dayOfMonth, int
 # + minute - The minute-of-hour to represent (0-59).
 # + second - The second-of-minute to represent (0-59).
 # + nanoOfSecond - The nano-of-second to represent (0-999,999,999).
-# + return - The LocalDateTime.
-public function ofMonthFullWithNano(int year, Month month, int dayOfMonth, int hour, int minute, int second, int nanoOfSecond) returns LocalDateTime {
-    handle externalObj = java_time_LocalDateTime_of6(year, month.jObj, dayOfMonth, hour, minute, second, nanoOfSecond);
+# + return - LocalDateTime|error — the constructed date-time, or an error if the date-time is invalid.
+public function ofMonthFullWithNano(int year, Month month, int dayOfMonth, int hour, int minute, int second, int nanoOfSecond) returns LocalDateTime|error {
+    handle externalObj = check trap java_time_LocalDateTime_of6(year, month.jObj, dayOfMonth, hour, minute, second, nanoOfSecond);
     return new (externalObj);
 }
 
@@ -736,7 +736,7 @@ function parseFormatter(CharSequence text, DateTimeFormatter formatter) returns 
 # Retrieves the minimum supported LocalDateTime (-999999999-01-01T00:00:00).
 #
 # + return - The minimum LocalDateTime.
-public function getMINDateTime() returns LocalDateTime {
+public function getMinDateTime() returns LocalDateTime {
     handle externalObj = java_time_LocalDateTime_getMIN();
     LocalDateTime newObj = new (externalObj);
     return newObj;
@@ -745,7 +745,7 @@ public function getMINDateTime() returns LocalDateTime {
 # Retrieves the maximum supported LocalDateTime (+999999999-12-31T23:59:59.999999999).
 #
 # + return - The maximum LocalDateTime.
-public function getMAXDateTime() returns LocalDateTime {
+public function getMaxDateTime() returns LocalDateTime {
     handle externalObj = java_time_LocalDateTime_getMAX();
     LocalDateTime newObj = new (externalObj);
     return newObj;
@@ -1003,37 +1003,37 @@ function java_time_LocalDateTime_now3(handle arg0) returns handle = @java:Method
     paramTypes: ["java.time.ZoneId"]
 } external;
 
-function java_time_LocalDateTime_of(int arg0, int arg1, int arg2, int arg3, int arg4) returns handle = @java:Method {
+function java_time_LocalDateTime_of(int arg0, int arg1, int arg2, int arg3, int arg4) returns handle|error = @java:Method {
     name: "of",
     'class: "java.time.LocalDateTime",
     paramTypes: ["int", "int", "int", "int", "int"]
 } external;
 
-function java_time_LocalDateTime_of2(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) returns handle = @java:Method {
+function java_time_LocalDateTime_of2(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) returns handle|error = @java:Method {
     name: "of",
     'class: "java.time.LocalDateTime",
     paramTypes: ["int", "int", "int", "int", "int", "int"]
 } external;
 
-function java_time_LocalDateTime_of3(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6) returns handle = @java:Method {
+function java_time_LocalDateTime_of3(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6) returns handle|error = @java:Method {
     name: "of",
     'class: "java.time.LocalDateTime",
     paramTypes: ["int", "int", "int", "int", "int", "int", "int"]
 } external;
 
-function java_time_LocalDateTime_of4(int arg0, handle arg1, int arg2, int arg3, int arg4) returns handle = @java:Method {
+function java_time_LocalDateTime_of4(int arg0, handle arg1, int arg2, int arg3, int arg4) returns handle|error = @java:Method {
     name: "of",
     'class: "java.time.LocalDateTime",
     paramTypes: ["int", "java.time.Month", "int", "int", "int"]
 } external;
 
-function java_time_LocalDateTime_of5(int arg0, handle arg1, int arg2, int arg3, int arg4, int arg5) returns handle = @java:Method {
+function java_time_LocalDateTime_of5(int arg0, handle arg1, int arg2, int arg3, int arg4, int arg5) returns handle|error = @java:Method {
     name: "of",
     'class: "java.time.LocalDateTime",
     paramTypes: ["int", "java.time.Month", "int", "int", "int", "int"]
 } external;
 
-function java_time_LocalDateTime_of6(int arg0, handle arg1, int arg2, int arg3, int arg4, int arg5, int arg6) returns handle = @java:Method {
+function java_time_LocalDateTime_of6(int arg0, handle arg1, int arg2, int arg3, int arg4, int arg5, int arg6) returns handle|error = @java:Method {
     name: "of",
     'class: "java.time.LocalDateTime",
     paramTypes: ["int", "java.time.Month", "int", "int", "int", "int", "int"]

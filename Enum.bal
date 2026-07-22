@@ -165,9 +165,9 @@ public distinct class Enum {
 #
 # + enumClass - The Class object of the enum type.
 # + name - The name of the constant to return.
-# + return - The enum constant with the specified name.
-public function ofEnumValue(Class enumClass, string name) returns Enum {
-    handle externalObj = java_lang_Enum_valueOf(enumClass.jObj, java:fromString(name));
+# + return - Enum|error — the enum constant, or an error if no constant with the given name exists.
+public function ofEnumValue(Class enumClass, string name) returns Enum|error {
+    handle externalObj = check trap java_lang_Enum_valueOf(enumClass.jObj, java:fromString(name));
     Enum newObj = new (externalObj);
     return newObj;
 }
@@ -232,7 +232,7 @@ function java_lang_Enum_ordinal(handle receiver) returns int = @java:Method {
     paramTypes: []
 } external;
 
-function java_lang_Enum_valueOf(handle arg0, handle arg1) returns handle = @java:Method {
+function java_lang_Enum_valueOf(handle arg0, handle arg1) returns handle|error = @java:Method {
     name: "valueOf",
     'class: "java.lang.Enum",
     paramTypes: ["java.lang.Class", "java.lang.String"]

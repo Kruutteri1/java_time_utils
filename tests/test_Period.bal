@@ -39,7 +39,7 @@ function testOfPeriodWeeksConvertsToDays() {
 
 @test:Config {}
 function testGetZERO() {
-    Period p = getZERO();
+    Period p = getZero();
     test:assertTrue(p.isZero());
     test:assertEquals(p.getYears(), 0);
     test:assertEquals(p.getMonths(), 0);
@@ -48,8 +48,8 @@ function testGetZERO() {
 
 @test:Config {}
 function testBetweenTwoDates() {
-    LocalDate startDate = ofDate(2026, 1, 1);
-    LocalDate endDate = ofDate(2026, 7, 15);
+    LocalDate startDate = checkpanic ofDate(2026, 1, 1);
+    LocalDate endDate = checkpanic ofDate(2026, 7, 15);
     Period p = between(startDate, endDate);
 
     test:assertEquals(p.getYears(), 0);
@@ -59,7 +59,7 @@ function testBetweenTwoDates() {
 
 @test:Config {}
 function testBetweenSameDateIsZero() {
-    LocalDate d = ofDate(2026, 7, 15);
+    LocalDate d = checkpanic ofDate(2026, 7, 15);
     Period p = between(d, d);
     test:assertTrue(p.isZero());
 }
@@ -74,7 +74,7 @@ function testToString() {
 
 @test:Config {}
 function testToStringZero() {
-    Period p = getZERO();
+    Period p = getZero();
     test:assertEquals(p.toString(), "P0D");
 }
 
@@ -101,7 +101,7 @@ function testHashCodeConsistentWithEquals() {
     test:assertEquals(p1.hashCode(), p2.hashCode());
 }
 
-// ===== Checks =====
+// ===== s =====
 
 @test:Config {}
 function testIsZeroTrue() {
@@ -281,8 +281,8 @@ function testImmutability() {
 @test:Config {}
 function testBetweenReversedDatesIsNegative() {
     // end before start -> negative period
-    LocalDate startDate = ofDate(2026, 7, 15);
-    LocalDate endDate = ofDate(2026, 1, 1);
+    LocalDate startDate =  checkpanic ofDate(2026, 7, 15);
+    LocalDate endDate = checkpanic ofDate(2026, 1, 1);
     Period p = between(startDate, endDate);
     test:assertTrue(p.isNegative());
 }
@@ -300,7 +300,7 @@ function testMultipliedByZeroGivesZero() {
     Period p = ofPeriod(1, 2, 3);
     Period result = p.multipliedBy(0);
     test:assertTrue(result.isZero());
-    test:assertTrue(result.isEquals(getZERO()));
+    test:assertTrue(result.isEquals(getZero()));
 }
 
 @test:Config {}
@@ -312,7 +312,7 @@ function testMultipliedByOne() {
 
 @test:Config {}
 function testChainedWithMethods() {
-    Period p = getZERO().withYears(5).withMonths(6).withDays(7);
+    Period p = getZero().withYears(5).withMonths(6).withDays(7);
     test:assertEquals(p.getYears(), 5);
     test:assertEquals(p.getMonths(), 6);
     test:assertEquals(p.getDays(), 7);
@@ -320,7 +320,7 @@ function testChainedWithMethods() {
 
 @test:Config {}
 function testChainedPlusMethods() {
-    Period p = ofPeriodYears(1).plusMonths(2).plusDays(3);
+    Period p = (ofPeriodYears(1)).plusMonths(2).plusDays(3);
     test:assertEquals(p.getYears(), 1);
     test:assertEquals(p.getMonths(), 2);
     test:assertEquals(p.getDays(), 3);
@@ -433,7 +433,7 @@ function testToTotalMonthsHandlesMaxYearsWithoutOverflow() {
 
 @test:Config {}
 function testMultipliedByDoesNotThrowOnSafeValues() {
-    // sanity check: a normal, non-overflowing case must NOT panic
+    // sanity : a normal, non-overflowing case must NOT panic
     Period p = ofPeriod(1, 2, 3);
     Period|error result = trap p.multipliedBy(1000);
     test:assertTrue(result is Period);

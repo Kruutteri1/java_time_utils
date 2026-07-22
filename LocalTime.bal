@@ -508,9 +508,9 @@ function nowFromZone(ZoneId zone) returns LocalTime {
 #
 # + hour - The hour-of-day to represent.
 # + minute - The minute-of-hour to represent.
-# + return - The LocalTime.
-public function ofTime(int hour, int minute) returns LocalTime {
-    handle externalObj = java_time_LocalTime_of(hour, minute);
+# + return - LocalTime|error — the constructed time, or an error if hour or minute is out of range.
+public function ofTime(int hour, int minute) returns LocalTime|error {
+    handle externalObj = check java_time_LocalTime_of(hour, minute);
     LocalTime newObj = new (externalObj);
     return newObj;
 }
@@ -520,9 +520,9 @@ public function ofTime(int hour, int minute) returns LocalTime {
 # + hour - The hour-of-day to represent.
 # + minute - The minute-of-hour to represent.
 # + second - The second-of-minute to represent.
-# + return - The LocalTime.
-public function ofTimeWithSecond(int hour, int minute, int second) returns LocalTime {
-    handle externalObj = java_time_LocalTime_of2(hour, minute, second);
+# + return - LocalTime|error — the constructed time, or an error if any parameter is out of range.
+public function ofTimeWithSecond(int hour, int minute, int second) returns LocalTime|error {
+    handle externalObj = check java_time_LocalTime_of2(hour, minute, second);
     LocalTime newObj = new (externalObj);
     return newObj;
 }
@@ -533,9 +533,9 @@ public function ofTimeWithSecond(int hour, int minute, int second) returns Local
 # + minute - The minute-of-hour.
 # + second - The second-of-minute.
 # + nanoOfSecond - The nano-of-second.
-# + return - The LocalTime.
-public function ofTimeWithSecondNano(int hour, int minute, int second, int nanoOfSecond) returns LocalTime {
-    handle externalObj = java_time_LocalTime_of3(hour, minute, second, nanoOfSecond);
+# + return - LocalTime|error — the constructed time, or an error if any parameter is out of range.
+public function ofTimeWithSecondNano(int hour, int minute, int second, int nanoOfSecond) returns LocalTime|error {
+    handle externalObj = check java_time_LocalTime_of3(hour, minute, second, nanoOfSecond);
     LocalTime newObj = new (externalObj);
     return newObj;
 }
@@ -554,9 +554,9 @@ function ofInstantWithZones(Instant instant, ZoneId zone) returns LocalTime {
 # Obtains an instance of LocalTime from a nanos-of-day value.
 #
 # + nanoOfDay - The nanos of day.
-# + return - The LocalTime.
-public function ofNanoOfDay(int nanoOfDay) returns LocalTime {
-    handle externalObj = java_time_LocalTime_ofNanoOfDay(nanoOfDay);
+# + return - LocalTime|error — the constructed time, or an error if nanoOfDay is negative or exceeds 86,399,999,999,999.
+public function ofNanoOfDay(int nanoOfDay) returns LocalTime|error {
+    handle externalObj = check java_time_LocalTime_ofNanoOfDay(nanoOfDay);
     LocalTime newObj = new (externalObj);
     return newObj;
 }
@@ -564,9 +564,9 @@ public function ofNanoOfDay(int nanoOfDay) returns LocalTime {
 # Obtains an instance of LocalTime from a second-of-day value.
 #
 # + secondOfDay - The second of day.
-# + return - The LocalTime.
-public function ofSecondOfDay(int secondOfDay) returns LocalTime {
-    handle externalObj = java_time_LocalTime_ofSecondOfDay(secondOfDay);
+# + return - LocalTime|error — the constructed time, or an error if secondOfDay is negative or exceeds 86,399.
+public function ofSecondOfDay(int secondOfDay) returns LocalTime|error {
+    handle externalObj = check java_time_LocalTime_ofSecondOfDay(secondOfDay);
     LocalTime newObj = new (externalObj);
     return newObj;
 }
@@ -604,7 +604,7 @@ public function getMinTime() returns LocalTime {
 # Retrieves the value of the public field `MAX`.
 #
 # + return - The `LocalTime` value of the field.
-public function getMAXTime() returns LocalTime {
+public function getMaxTime() returns LocalTime {
     handle externalObj = java_time_LocalTime_getMAX();
     LocalTime newObj = new (externalObj);
     return newObj;
@@ -613,7 +613,7 @@ public function getMAXTime() returns LocalTime {
 # Retrieves the value of the public field `MIDNIGHT`.
 #
 # + return - The `LocalTime` value of the field.
-public function getMIDNIGHT() returns LocalTime {
+public function getMidnigth() returns LocalTime {
     handle externalObj = java_time_LocalTime_getMIDNIGHT();
     LocalTime newObj = new (externalObj);
     return newObj;
@@ -622,7 +622,7 @@ public function getMIDNIGHT() returns LocalTime {
 # Retrieves the value of the public field `NOON`.
 #
 # + return - The `LocalTime` value của the field.
-public function getNOON() returns LocalTime {
+public function getNoon() returns LocalTime {
     handle externalObj = java_time_LocalTime_getNOON();
     LocalTime newObj = new (externalObj);
     return newObj;
@@ -808,19 +808,19 @@ function java_time_LocalTime_now3(handle arg0) returns handle = @java:Method {
     paramTypes: ["java.time.ZoneId"]
 } external;
 
-function java_time_LocalTime_of(int arg0, int arg1) returns handle = @java:Method {
+function java_time_LocalTime_of(int arg0, int arg1) returns handle|error = @java:Method {
     name: "of",
     'class: "java.time.LocalTime",
     paramTypes: ["int", "int"]
 } external;
 
-function java_time_LocalTime_of2(int arg0, int arg1, int arg2) returns handle = @java:Method {
+function java_time_LocalTime_of2(int arg0, int arg1, int arg2) returns handle|error = @java:Method {
     name: "of",
     'class: "java.time.LocalTime",
     paramTypes: ["int", "int", "int"]
 } external;
 
-function java_time_LocalTime_of3(int arg0, int arg1, int arg2, int arg3) returns handle = @java:Method {
+function java_time_LocalTime_of3(int arg0, int arg1, int arg2, int arg3) returns handle|error = @java:Method {
     name: "of",
     'class: "java.time.LocalTime",
     paramTypes: ["int", "int", "int", "int"]
@@ -832,13 +832,13 @@ function java_time_LocalTime_ofInstant(handle arg0, handle arg1) returns handle 
     paramTypes: ["java.time.Instant", "java.time.ZoneId"]
 } external;
 
-function java_time_LocalTime_ofNanoOfDay(int arg0) returns handle = @java:Method {
+function java_time_LocalTime_ofNanoOfDay(int arg0) returns handle|error = @java:Method {
     name: "ofNanoOfDay",
     'class: "java.time.LocalTime",
     paramTypes: ["long"]
 } external;
 
-function java_time_LocalTime_ofSecondOfDay(int arg0) returns handle = @java:Method {
+function java_time_LocalTime_ofSecondOfDay(int arg0) returns handle|error = @java:Method {
     name: "ofSecondOfDay",
     'class: "java.time.LocalTime",
     paramTypes: ["long"]

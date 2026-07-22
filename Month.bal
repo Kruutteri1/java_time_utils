@@ -281,9 +281,9 @@ function Month_from(TemporalAccessor temporal) returns Month {
 # Obtains an instance of `Month` from an int value.
 #
 # + month - The month-of-year to represent, from 1 (January) to 12 (December).
-# + return - The month-of-year.
-public function getMonthOf(int month) returns Month {
-    handle externalObj = java_time_Month_of(month);
+# + return - Month|error — the month constant, or an error if month is outside the range 1-12.
+public function getMonthOf(int month) returns Month|error {
+    handle externalObj = check java_time_Month_of(month);
     Month newObj = new (externalObj);
     return newObj;
 }
@@ -292,9 +292,9 @@ public function getMonthOf(int month) returns Month {
 #
 # + enumClass - The Class object of the enum type.
 # + name - The name of the constant to return.
-# + return - The enum constant with the specified name.
-public function getMonthValueOfEnum(Class enumClass, string name) returns Enum {
-    handle externalObj = java_time_Month_valueOf(enumClass.jObj, java:fromString(name));
+# + return - Enum|error — the enum constant, or an error if no constant with the given name exists.
+public function getMonthValueOfEnum(Class enumClass, string name) returns Enum|error {
+    handle externalObj = check java_time_Month_valueOf(enumClass.jObj, java:fromString(name));
     Enum newObj = new (externalObj);
     return newObj;
 }
@@ -302,16 +302,16 @@ public function getMonthValueOfEnum(Class enumClass, string name) returns Enum {
 # Returns the enum constant of this type with the specified name.
 #
 # + name - The name of the constant to return.
-# + return - The month constant with the specified name.
-public function getMonthValueOf(string name) returns Month {
-    handle externalObj = java_time_Month_valueOf2(java:fromString(name));
+# + return - Month|error — the month constant, or an error if no month with the given name exists (e.g. misspelled).
+public function getMonthValueOf(string name) returns Month|error {
+    handle externalObj = check java_time_Month_valueOf2(java:fromString(name));
     Month newObj = new (externalObj);
     return newObj;
 }
 
 # Returns an array containing the constants of this enum class, in the order they're declared.
 #
-# + return - An array of all Month constants, or an error if conversion fails.
+# + return - Month[]|error — an array of all twelve Month constants, or an error if conversion fails.
 public function getMonthValues() returns Month[]|error {
     handle externalObj = java_time_Month_values();
     Month[] newObj = [];
@@ -327,7 +327,7 @@ public function getMonthValues() returns Month[]|error {
 # Retrieves the constant representing the month of January.
 #
 # + return - The January month constant.
-public function getJANUARY() returns Month {
+public function getJanuary() returns Month {
     handle externalObj = java_time_Month_getJANUARY();
     Month newObj = new (externalObj);
     return newObj;
@@ -336,7 +336,7 @@ public function getJANUARY() returns Month {
 # Retrieves the constant representing the month of February.
 #
 # + return - The February month constant.
-public function getFEBRUARY() returns Month {
+public function getFebruary() returns Month {
     handle externalObj = java_time_Month_getFEBRUARY();
     Month newObj = new (externalObj);
     return newObj;
@@ -564,7 +564,7 @@ function java_time_Month_notifyAll(handle receiver) = @java:Method {
     paramTypes: []
 } external;
 
-function java_time_Month_of(int arg0) returns handle = @java:Method {
+function java_time_Month_of(int arg0) returns handle|error = @java:Method {
     name: "of",
     'class: "java.time.Month",
     paramTypes: ["int"]
@@ -594,13 +594,13 @@ function java_time_Month_range(handle receiver, handle arg0) returns handle = @j
     paramTypes: ["java.time.temporal.TemporalField"]
 } external;
 
-function java_time_Month_valueOf(handle arg0, handle arg1) returns handle = @java:Method {
+function java_time_Month_valueOf(handle arg0, handle arg1) returns handle|error = @java:Method {
     name: "valueOf",
     'class: "java.time.Month",
     paramTypes: ["java.lang.Class", "java.lang.String"]
 } external;
 
-function java_time_Month_valueOf2(handle arg0) returns handle = @java:Method {
+function java_time_Month_valueOf2(handle arg0) returns handle|error = @java:Method {
     name: "valueOf",
     'class: "java.time.Month",
     paramTypes: ["java.lang.String"]
