@@ -2,6 +2,10 @@
 
 A Ballerina wrapper library around `java.time` — providing `LocalDate`, `LocalDateTime`, `LocalTime`, and `Period` for working with dates and times without time zones.
 
+> 📚 For a complete overview of all features and the full API reference, please visit:  
+> **[central.ballerina.io/kruutteri1/java_time_utils/latest](https://central.ballerina.io/kruutteri1/java_time_utils/latest)** — detailed documentation and full functionality can be found there.
+
+
 > **Note on scope:** This library wraps only the members that are fully implemented. A few Java-side wrapper types (`Month`, `DayOfWeek`, `IsoEra`, `Chronology`, `IsoChronology`, `Class`) are declared as Java bindings internally but have no public members yet, so any method that would return or accept one of those types (e.g. `getMonth()`, `getDayOfWeek()`, `getEra()`, `getChronology()`, `getClass()`) is intentionally left out of this documentation and out of the public API for now.
 
 ---
