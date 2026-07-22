@@ -601,7 +601,7 @@ public function ofDate(int year, int month, int day) returns LocalDate {
 # + month - The month enum.
 # + day - The day-of-month (1-31).
 # + return - The LocalDate.
-function ofMonth(int year, Month month, int day) returns LocalDate {
+public function ofMonth(int year, Month month, int day) returns LocalDate {
     handle externalObj = java_time_LocalDate_of2(year, month.jObj, day);
     LocalDate newObj = new (externalObj);
     return newObj;

@@ -644,7 +644,7 @@ public function ofWithNanos(int year, int month, int dayOfMonth, int hour, int m
 # + hour - The hour-of-day to represent (0-23).
 # + minute - The minute-of-hour to represent (0-59).
 # + return - The LocalDateTime.
-function ofMonthFull(int year, Month month, int dayOfMonth, int hour, int minute) returns LocalDateTime {
+public function ofMonthFull(int year, Month month, int dayOfMonth, int hour, int minute) returns LocalDateTime {
     handle externalObj = java_time_LocalDateTime_of4(year, month.jObj, dayOfMonth, hour, minute);
     return new (externalObj);
 }
@@ -658,7 +658,7 @@ function ofMonthFull(int year, Month month, int dayOfMonth, int hour, int minute
 # + minute - The minute-of-hour to represent (0-59).
 # + second - The second-of-minute to represent (0-59).
 # + return - The LocalDateTime.
-function ofMonthFullWithsecond(int year, Month month, int dayOfMonth, int hour, int minute, int second) returns LocalDateTime {
+public function ofMonthFullWithsecond(int year, Month month, int dayOfMonth, int hour, int minute, int second) returns LocalDateTime {
     handle externalObj = java_time_LocalDateTime_of5(year, month.jObj, dayOfMonth, hour, minute, second);
     return new (externalObj);
 }
@@ -673,7 +673,7 @@ function ofMonthFullWithsecond(int year, Month month, int dayOfMonth, int hour, 
 # + second - The second-of-minute to represent (0-59).
 # + nanoOfSecond - The nano-of-second to represent (0-999,999,999).
 # + return - The LocalDateTime.
-function ofMonthFullWithNano(int year, Month month, int dayOfMonth, int hour, int minute, int second, int nanoOfSecond) returns LocalDateTime {
+public function ofMonthFullWithNano(int year, Month month, int dayOfMonth, int hour, int minute, int second, int nanoOfSecond) returns LocalDateTime {
     handle externalObj = java_time_LocalDateTime_of6(year, month.jObj, dayOfMonth, hour, minute, second, nanoOfSecond);
     return new (externalObj);
 }
