@@ -438,3 +438,27 @@ function testMultipliedByDoesNotThrowOnSafeValues() {
     Period|error result = trap p.multipliedBy(1000);
     test:assertTrue(result is Period);
 }
+
+@test:Config
+function testParsePeriodValid() returns error? {
+    Period period = check parsePeriod("P1Y2M3D");
+    test:assertNotEquals(period, (), "Parsed Period should not be null");
+}
+
+@test:Config
+function testParsePeriodWeeks() returns error? {
+    Period period = check parsePeriod("P2W");
+    test:assertNotEquals(period, (), "Parsed Period with weeks should not be null");
+}
+
+@test:Config
+function testParsePeriodInvalidFormat() {
+    Period|error result = parsePeriod("1Y-2M-3D");
+    test:assertTrue(result is error, "Parsing invalid Period format should result in an error");
+}
+
+@test:Config
+function testParsePeriodEmptyString() {
+    Period|error result = parsePeriod("");
+    test:assertTrue(result is error, "Parsing empty string as Period should result in an error");
+}

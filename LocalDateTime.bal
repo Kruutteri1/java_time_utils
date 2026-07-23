@@ -167,18 +167,34 @@ public distinct class LocalDateTime {
         return java_time_LocalDateTime_hashCode(self.jObj);
     }
 
-    # Checks if this date-time is after the specified date-time.
-    # + other - The other date-time to compare to.
-    # + return - True if this date-time is after the specified date-time.
-    function isAfter(ChronoLocalDateTime other) returns boolean {
-        return java_time_LocalDateTime_isAfter(self.jObj, other.jObj);
+    # Checks if this date-time is after the specified date-time or date. If a
+    # LocalDate is given, only the date part of this date-time is compared —
+    # the time component is ignored.
+    #
+    # + other - The other date-time, or date, to compare to.
+    # + return - True if this date-time is after the specified date-time or date.
+    public function isAfter(LocalDateTime|LocalDate other) returns boolean {
+        if other is LocalDateTime {
+            return java_time_LocalDateTime_isAfter(self.jObj, other.jObj);
+        } else {
+            LocalDate selfAsDate = checkpanic ofDate(self.getYear(), self.getMonthValue(), self.getDayOfMonth());
+            return java_time_LocalDate_isAfter(selfAsDate.jObj, other.jObj);
+        }
     }
 
-    # Checks if this date-time is before the specified date-time.
-    # + other - The other date-time to compare to.
-    # + return - True if this date-time is before the specified date-time.
-    function isBefore(ChronoLocalDateTime other) returns boolean {
-        return java_time_LocalDateTime_isBefore(self.jObj, other.jObj);
+    # Checks if this date-time is before the specified date-time or date. If a
+    # LocalDate is given, only the date part of this date-time is compared —
+    # the time component is ignored.
+    #
+    # + other - The other date-time, or date, to compare to.
+    # + return - True if this date-time is before the specified date-time or date.
+    public function isBefore(LocalDateTime|LocalDate other) returns boolean {
+        if other is LocalDateTime {
+            return java_time_LocalDateTime_isBefore(self.jObj, other.jObj);
+        } else {
+            LocalDate selfAsDate = checkpanic ofDate(self.getYear(), self.getMonthValue(), self.getDayOfMonth());
+            return java_time_LocalDate_isBefore(selfAsDate.jObj, other.jObj);
+        }
     }
 
     # Checks if this date-time is equal to the specified date-time.
@@ -571,7 +587,7 @@ function LocalDateTime_from(TemporalAccessor temporal) returns LocalDateTime {
 # Obtains the current date-time from the system clock in the default time-zone.
 #
 # + return - The current LocalDateTime.
-public function getCurrentDateTime() returns LocalDateTime { 
+public function getCurrentDateTime() returns LocalDateTime {
     handle externalObj = java_time_LocalDateTime_now();
     return new (externalObj);
 }
@@ -712,12 +728,12 @@ function ofInstantWithZone(Instant instant, ZoneId zone) returns LocalDateTime {
     return newObj;
 }
 
-# Parses a text string to a LocalDateTime using the default ISO_LOCAL_DATE_TIME formatter.
+# Parses a text string to a LocalDateTime using the default ISO_LOCAL_DATE_TIME formatter, such as "2026-07-22T14:28:19".
 #
 # + text - The text to parse.
-# + return - The parsed LocalDateTime.
-function parseWithText(CharSequence text) returns LocalDateTime {
-    handle externalObj = java_time_LocalDateTime_parse(text.jObj);
+# + return - LocalDateTime|error — the constructed date-time, or an error if the date-time is invalid.
+public function parseWithText(string text) returns LocalDateTime|error {
+    handle externalObj = check trap java_time_LocalDateTime_parse(java:fromString(text));
     LocalDateTime newObj = new (externalObj);
     return newObj;
 }
@@ -726,9 +742,9 @@ function parseWithText(CharSequence text) returns LocalDateTime {
 #
 # + text - The text to parse.
 # + formatter - The formatter to use.
-# + return - The parsed LocalDateTime.
-function parseFormatter(CharSequence text, DateTimeFormatter formatter) returns LocalDateTime {
-    handle externalObj = java_time_LocalDateTime_parse2(text.jObj, formatter.jObj);
+# + return - LocalDateTime|error — the constructed date-time, or an error if the date-time is invalid.
+public function parseFormatter(string text, DateTimeFormatter formatter) returns LocalDateTime|error {
+    handle externalObj = check trap java_time_LocalDateTime_parse2(java:fromString(text), formatter.jObj);
     LocalDateTime newObj = new (externalObj);
     return newObj;
 }
@@ -1057,13 +1073,13 @@ function java_time_LocalDateTime_ofInstant(handle arg0, handle arg1) returns han
     paramTypes: ["java.time.Instant", "java.time.ZoneId"]
 } external;
 
-function java_time_LocalDateTime_parse(handle arg0) returns handle = @java:Method {
+function java_time_LocalDateTime_parse(handle arg0) returns handle|error = @java:Method {
     name: "parse",
     'class: "java.time.LocalDateTime",
     paramTypes: ["java.lang.CharSequence"]
 } external;
 
-function java_time_LocalDateTime_parse2(handle arg0, handle arg1) returns handle = @java:Method {
+function java_time_LocalDateTime_parse2(handle arg0, handle arg1) returns handle|error = @java:Method {
     name: "parse",
     'class: "java.time.LocalDateTime",
     paramTypes: ["java.lang.CharSequence", "java.time.format.DateTimeFormatter"]

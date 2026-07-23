@@ -464,3 +464,29 @@ function testNanoOfDay86399999999999IsValid() {
     LocalTime|error t = trap ofNanoOfDay(86399999999999);
     test:assertTrue(t is LocalTime);
 }
+
+@test:Config
+function testParseLocalTimeDefaultIso() returns error? {
+    LocalTime time = check parseText("14:28:19");
+    test:assertNotEquals(time, (), "Parsed LocalTime should not be null");
+}
+
+@test:Config
+function testParseLocalTimeDefaultIsoInvalidFormat() {
+    LocalTime|error result = parseText("14-28-19"); // Неверный разделитель для ISO формата
+    test:assertTrue(result is error, "Parsing invalid ISO LocalTime format should result in an error");
+}
+
+@test:Config
+function testParseLocalTimeWithFormatter() returns error? {
+    DateTimeFormatter formatter = check ofPattern("HH.mm.ss");
+    LocalTime time = check parseTextWithFormatter("14.28.19", formatter);
+    test:assertNotEquals(time, (), "Parsed LocalTime with custom formatter should not be null");
+}
+
+@test:Config
+function testParseLocalTimeWithFormatterMismatch() returns error? {
+    DateTimeFormatter formatter = check ofPattern("HH:mm:ss");
+    LocalTime|error result = parseTextWithFormatter("14-28-19", formatter);
+    test:assertTrue(result is error, "Mismatched pattern and text for LocalTime should result in an error");
+}

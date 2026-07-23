@@ -572,3 +572,125 @@ function testNano999999999IsValid() {
     LocalDateTime|error dt = trap ofWithNanos(2026, 7, 15, 10, 0, 0, 999999999);
     test:assertTrue(dt is LocalDateTime);
 }
+
+@test:Config
+function testParseLocalDateTimeDefaultIso() returns error? {
+    LocalDateTime dateTime = check parseWithText("2026-07-22T14:28:19");
+    test:assertNotEquals(dateTime, (), "Parsed LocalDateTime should not be null");
+}
+
+@test:Config
+function testParseLocalDateTimeDefaultIsoInvalidFormat() {
+    LocalDateTime|error result = parseWithText("2026-07-22 14:28:19"); // Пропущен символ 'T'
+    test:assertTrue(result is error, "Parsing invalid ISO LocalDateTime format should result in an error");
+}
+
+@test:Config
+function testParseLocalDateTimeWithFormatter() returns error? {
+    DateTimeFormatter formatter = check ofPattern("yyyy-MM-dd HH:mm:ss");
+    LocalDateTime dateTime = check parseFormatter("2026-07-22 14:28:19", formatter);
+    test:assertNotEquals(dateTime, (), "Parsed LocalDateTime with custom formatter should not be null");
+}
+
+@test:Config
+function testParseLocalDateTimeWithFormatterMismatch() returns error? {
+    DateTimeFormatter formatter = check ofPattern("yyyy-MM-dd HH:mm:ss");
+    LocalDateTime|error result = parseFormatter("2026-07-22T14:28:19", formatter);
+    test:assertTrue(result is error, "Mismatched pattern and text for LocalDateTime should result in an error");
+}
+
+
+// ===================================================================
+// isAfter / isBefore — comparing LocalDateTime against LocalDateTime
+// ===================================================================
+
+@test:Config {}
+function testLocalDateTimeIsAfterTrueForLater() {
+    LocalDateTime dt1 = checkpanic ofDateTime(2026, 7, 16, 14, 30);
+    LocalDateTime dt2 = checkpanic ofDateTime(2026, 7, 16, 10, 0);
+    test:assertTrue(dt1.isAfter(dt2), "2026-07-16T14:30 should be after 2026-07-16T10:00");
+}
+
+@test:Config {}
+function testLocalDateTimeIsAfterFalseForEarlier() {
+    LocalDateTime dt1 = checkpanic ofDateTime(2026, 7, 16, 10, 0);
+    LocalDateTime dt2 = checkpanic ofDateTime(2026, 7, 16, 14, 30);
+    test:assertFalse(dt1.isAfter(dt2), "2026-07-16T10:00 should not be after 2026-07-16T14:30");
+}
+
+@test:Config {}
+function testLocalDateTimeIsAfterFalseForEqual() {
+    LocalDateTime dt1 = checkpanic ofDateTime(2026, 7, 16, 12, 0);
+    LocalDateTime dt2 = checkpanic ofDateTime(2026, 7, 16, 12, 0);
+    test:assertFalse(dt1.isAfter(dt2), "A datetime cannot be after an equal datetime");
+}
+
+@test:Config {}
+function testLocalDateTimeIsBeforeTrueForEarlier() {
+    LocalDateTime dt1 = checkpanic ofDateTime(2026, 7, 16, 10, 0);
+    LocalDateTime dt2 = checkpanic ofDateTime(2026, 7, 16, 14, 30);
+    test:assertTrue(dt1.isBefore(dt2), "2026-07-16T10:00 should be before 2026-07-16T14:30");
+}
+
+@test:Config {}
+function testLocalDateTimeIsBeforeFalseForLater() {
+    LocalDateTime dt1 = checkpanic ofDateTime(2026, 7, 16, 14, 30);
+    LocalDateTime dt2 = checkpanic ofDateTime(2026, 7, 16, 10, 0);
+    test:assertFalse(dt1.isBefore(dt2), "2026-07-16T14:30 should not be before 2026-07-16T10:00");
+}
+
+@test:Config {}
+function testLocalDateTimeIsBeforeFalseForEqual() {
+    LocalDateTime dt1 = checkpanic ofDateTime(2026, 7, 16, 12, 0);
+    LocalDateTime dt2 = checkpanic ofDateTime(2026, 7, 16, 12, 0);
+    test:assertFalse(dt1.isBefore(dt2), "A datetime cannot be before an equal datetime");
+}
+
+// ===================================================================
+// isAfter / isBefore — comparing LocalDateTime against LocalDate
+// (time component of the LocalDateTime must be ignored for date comparison)
+// ===================================================================
+
+@test:Config {}
+function testLocalDateTimeIsAfterTrueWhenDateTimeDateLater() {
+    LocalDateTime dateTime = checkpanic ofDateTime(2026, 7, 16, 8, 0);
+    LocalDate date = checkpanic ofDate(2026, 7, 15);
+    test:assertTrue(dateTime.isAfter(date), "2026-07-16T08:00 should be after 2026-07-15");
+}
+
+@test:Config {}
+function testLocalDateTimeIsAfterFalseWhenDateTimeDateEarlier() {
+    LocalDateTime dateTime = checkpanic ofDateTime(2026, 7, 14, 22, 0);
+    LocalDate date = checkpanic ofDate(2026, 7, 15);
+    test:assertFalse(dateTime.isAfter(date), "2026-07-14T22:00 should not be after 2026-07-15");
+}
+
+@test:Config {}
+function testLocalDateTimeIsAfterFalseWhenSameDayIgnoringTime() {
+    // Same calendar day, datetime has late time — date part is equal, so not 'after'
+    LocalDateTime dateTime = checkpanic ofDateTime(2026, 7, 15, 23, 59);
+    LocalDate date = checkpanic ofDate(2026, 7, 15);
+    test:assertFalse(dateTime.isAfter(date), "Same calendar day should not make LocalDateTime 'after' LocalDate");
+}
+
+@test:Config {}
+function testLocalDateTimeIsBeforeFalseWhenSameDayIgnoringTime() {
+    // Same calendar day, datetime has early time — date part is equal, so not 'before'
+    LocalDateTime dateTime = checkpanic ofDateTime(2026, 7, 15, 0, 1);
+    LocalDate date = checkpanic ofDate(2026, 7, 15);
+    test:assertFalse(dateTime.isBefore(date), "Same calendar day should not make LocalDateTime 'before' LocalDate");
+}
+
+@test:Config {}
+function testLocalDateTimeIsBeforeTrueWhenDateTimeDateEarlier() {
+    LocalDateTime dateTime = checkpanic ofDateTime(2026, 7, 14, 23, 59);
+    LocalDate date = checkpanic ofDate(2026, 7, 15);
+    test:assertTrue(dateTime.isBefore(date), "2026-07-14T23:59 should be before 2026-07-15");
+}
+
+@test:Config {}
+function testLocalDateTimeIsBeforeFalseWhenDateTimeDateLater() {
+    LocalDateTime dateTime = checkpanic ofDateTime(2026, 7, 16, 0, 1);
+    LocalDate date = checkpanic ofDate(2026, 7, 15);
+    test:assertFalse(dateTime.isBefore(date), "2026-07-16T00:01 should not be before 2026-07-15");
+}

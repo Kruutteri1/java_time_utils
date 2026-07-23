@@ -398,9 +398,9 @@ public function ofPeriodYears(int years) returns Period {
 # Obtains a `Period` from a text string such as `PnYnMnD`.
 #
 # + text - The text to parse, not null.
-# + return - The parsed period.
-function Period_parse(CharSequence text) returns Period {
-    handle externalObj = java_time_Period_parse(text.jObj);
+# + return - Period|error — the parsed period, or an error if the text is invalid.
+public function parsePeriod(string text) returns Period|error {
+    handle externalObj = check trap java_time_Period_parse(java:fromString(text));
     Period newObj = new (externalObj);
     return newObj;
 }
@@ -582,7 +582,7 @@ function java_time_Period_ofYears(int arg0) returns handle = @java:Method {
     paramTypes: ["int"]
 } external;
 
-function java_time_Period_parse(handle arg0) returns handle = @java:Method {
+function java_time_Period_parse(handle arg0) returns handle|error = @java:Method {
     name: "parse",
     'class: "java.time.Period",
     paramTypes: ["java.lang.CharSequence"]

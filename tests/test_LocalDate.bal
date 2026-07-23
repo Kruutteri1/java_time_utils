@@ -598,3 +598,141 @@ function testDayOfYear365IsValid() {
     LocalDate|error d = trap ofYearDay(2026, 365);
     test:assertTrue(d is LocalDate);
 }
+
+
+@test:Config
+function testParseDefaultIso() returns error? {
+    LocalDate date = check parse("2026-07-22");
+    test:assertNotEquals(date, (), "Parsed LocalDate should not be null");
+}
+
+@test:Config
+function testParseDefaultIsoInvalidFormat() {
+    LocalDate|error result = parse("22-07-2026");
+    test:assertTrue(result is error, "Parsing invalid ISO date format should result in an error");
+}
+
+@test:Config
+function testParseWithFormatter() returns error? {
+    DateTimeFormatter formatter = check ofPattern("dd.MM.yyyy");
+    LocalDate date = check parseWithFormatter("22.07.2026", formatter);
+    test:assertNotEquals(date, (), "Parsed LocalDate with custom formatter should not be null");
+}
+
+@test:Config
+function testParseWithFormatterMismatch() returns error? {
+    DateTimeFormatter formatter = check ofPattern("yyyy-MM-dd");
+    LocalDate|error result = parseWithFormatter("22.07.2026", formatter);
+    test:assertTrue(result is error, "Mismatched pattern and text should result in an error");
+}
+
+
+
+// ===================================================================
+// isAfter / isBefore — comparing LocalDate against LocalDate
+// ===================================================================
+
+@test:Config {}
+function testIsAfterTrueForLaterDate() {
+    LocalDate date1 = checkpanic ofDate(2026, 7, 16);
+    LocalDate date2 = checkpanic ofDate(2026, 7, 15);
+    test:assertTrue(date1.isAfter(date2), "2026-07-16 should be after 2026-07-15");
+}
+
+@test:Config {}
+function testIsAfterFalseForEarlierDate() {
+    LocalDate date1 = checkpanic ofDate(2026, 7, 14);
+    LocalDate date2 = checkpanic ofDate(2026, 7, 15);
+    test:assertFalse(date1.isAfter(date2), "2026-07-14 should not be after 2026-07-15");
+}
+
+@test:Config {}
+function testIsAfterFalseForEqualDates() {
+    LocalDate date1 = checkpanic ofDate(2026, 7, 15);
+    LocalDate date2 = checkpanic ofDate(2026, 7, 15);
+    test:assertFalse(date1.isAfter(date2), "A date cannot be after an equal date");
+}
+
+@test:Config {}
+function testIsBeforeTrueForEarlierDate() {
+    LocalDate date1 = checkpanic ofDate(2026, 7, 14);
+    LocalDate date2 = checkpanic ofDate(2026, 7, 15);
+    test:assertTrue(date1.isBefore(date2), "2026-07-14 should be before 2026-07-15");
+}
+
+@test:Config {}
+function testIsBeforeFalseForLaterDate() {
+    LocalDate date1 = checkpanic ofDate(2026, 7, 16);
+    LocalDate date2 = checkpanic ofDate(2026, 7, 15);
+    test:assertFalse(date1.isBefore(date2), "2026-07-16 should not be before 2026-07-15");
+}
+
+@test:Config {}
+function testIsBeforeFalseForEqualDates() {
+    LocalDate date1 = checkpanic ofDate(2026, 7, 15);
+    LocalDate date2 = checkpanic ofDate(2026, 7, 15);
+    test:assertFalse(date1.isBefore(date2), "A date cannot be before an equal date");
+}
+
+// ===================================================================
+// isAfter / isBefore — comparing LocalDate against LocalDateTime
+// (time component of the LocalDateTime must be ignored)
+// ===================================================================
+
+@test:Config {}
+function testIsAfterTrueWhenDateLaterThanDateTime() {
+    LocalDate date = checkpanic ofDate(2026, 7, 16);
+    LocalDateTime dateTime = checkpanic ofDateTime(2026, 7, 15, 23, 59);
+    test:assertTrue(date.isAfter(dateTime), "2026-07-16 should be after 2026-07-15T23:59");
+}
+
+@test:Config {}
+function testIsAfterFalseWhenDateEarlierThanDateTime() {
+    LocalDate date = checkpanic ofDate(2026, 7, 14);
+    LocalDateTime dateTime = checkpanic ofDateTime(2026, 7, 15, 0, 1);
+    test:assertFalse(date.isAfter(dateTime), "2026-07-14 should not be after 2026-07-15T00:01");
+}
+
+@test:Config {}
+function testIsAfterFalseWhenSameDayIgnoringTime() {
+    // Same calendar day, but the LocalDateTime's time is late in the day —
+    // this must NOT make the date "before", since time is ignored.
+    LocalDate date = checkpanic ofDate(2026, 7, 15);
+    LocalDateTime dateTime = checkpanic ofDateTime(2026, 7, 15, 23, 59);
+    test:assertFalse(date.isAfter(dateTime), "Same calendar day should not be 'after' regardless of the time component");
+}
+
+@test:Config {}
+function testIsBeforeFalseWhenSameDayIgnoringTime() {
+    // Same calendar day, but the LocalDateTime's time is at the very start —
+    // this must NOT make the date "before" either, since time is ignored.
+    LocalDate date = checkpanic ofDate(2026, 7, 15);
+    LocalDateTime dateTime = checkpanic ofDateTime(2026, 7, 15, 0, 1);
+    test:assertFalse(date.isBefore(dateTime), "Same calendar day should not be 'before' regardless of the time component");
+}
+
+@test:Config {}
+function testIsBeforeTrueWhenDateEarlierThanDateTime() {
+    LocalDate date = checkpanic ofDate(2026, 7, 14);
+    LocalDateTime dateTime = checkpanic ofDateTime(2026, 7, 15, 0, 1);
+    test:assertTrue(date.isBefore(dateTime), "2026-07-14 should be before 2026-07-15T00:01");
+}
+
+@test:Config {}
+function testIsBeforeFalseWhenDateLaterThanDateTime() {
+    LocalDate date = checkpanic ofDate(2026, 7, 16);
+    LocalDateTime dateTime = checkpanic ofDateTime(2026, 7, 15, 23, 59);
+    test:assertFalse(date.isBefore(dateTime), "2026-07-16 should not be before 2026-07-15T23:59");
+}
+
+@test:Config {}
+function testIsAfterAndIsBeforeAreMutuallyExclusiveAcrossTypes() {
+    LocalDate date = checkpanic ofDate(2026, 8, 1);
+    LocalDateTime dateTime = checkpanic ofDateTime(2026, 7, 31, 12, 0);
+
+    boolean after = date.isAfter(dateTime);
+    boolean before = date.isBefore(dateTime);
+
+    test:assertTrue(after, "2026-08-01 should be after 2026-07-31T12:00");
+    test:assertFalse(before, "2026-08-01 should not also be before 2026-07-31T12:00");
+}

@@ -217,18 +217,38 @@ public distinct class LocalDate {
         return java_time_LocalDate_hashCode(self.jObj);
     }
 
-    # Checks if this date is after the specified date.
-    # + other - The other date to compare to.
+    # Checks if this date is after the specified date. If a LocalDateTime is
+    # given, only its date part (year, month, day) is compared — the time
+    # component is ignored.
+    #
+    # + other - The other date, or date-time, to compare to (LocalDate, LocalDateTime).
     # + return - True if this date is after the specified date.
-    function isAfter(ChronoLocalDate other) returns boolean {
-        return java_time_LocalDate_isAfter(self.jObj, other.jObj);
+    public function isAfter(LocalDate|LocalDateTime other) returns boolean {
+        LocalDate otherAsDate;
+        if other is LocalDate {
+            otherAsDate = other;
+        } else {
+            LocalDateTime otherDateTime = <LocalDateTime>other;
+            otherAsDate = checkpanic ofDate(otherDateTime.getYear(), otherDateTime.getMonthValue(), otherDateTime.getDayOfMonth());
+        }
+        return java_time_LocalDate_isAfter(self.jObj, otherAsDate.jObj);
     }
 
-    # Checks if this date is before the specified date.
-    # + other - The other date to compare to.
+    # Checks if this date is before the specified date. If a LocalDateTime is
+    # given, only its date part (year, month, day) is compared — the time
+    # component is ignored.
+    #
+    # + other - The other date, or date-time, to compare to (LocalDate, LocalDateTime).
     # + return - True if this date is before the specified date.
-    function isBefore(ChronoLocalDate other) returns boolean {
-        return java_time_LocalDate_isBefore(self.jObj, other.jObj);
+    public function isBefore(LocalDate|LocalDateTime other) returns boolean {
+        LocalDate otherAsDate;
+        if other is LocalDate {
+            otherAsDate = other;
+        } else {
+            LocalDateTime otherDateTime = <LocalDateTime>other;
+            otherAsDate = checkpanic ofDate(otherDateTime.getYear(), otherDateTime.getMonthValue(), otherDateTime.getDayOfMonth());
+        }
+        return java_time_LocalDate_isBefore(self.jObj, otherAsDate.jObj);
     }
 
     # Checks if this date is equal to the specified date.
@@ -642,9 +662,9 @@ public function ofYearDay(int year, int dayOfYear) returns LocalDate|error {
 # Parses a string to a LocalDate using the ISO-8601 formatter.
 #
 # + text - The text to parse, such as "2026-07-15".
-# + return - The LocalDate.
-function parse(CharSequence text) returns LocalDate {
-    handle externalObj = java_time_LocalDate_parse(text.jObj);
+# + return - LocalDate|error — the constructed date, or an error if the date is invalid.
+public function parse(string text) returns LocalDate|error {
+    handle externalObj = check trap java_time_LocalDate_parse(java:fromString(text));
     LocalDate newObj = new (externalObj);
     return newObj;
 }
@@ -653,9 +673,9 @@ function parse(CharSequence text) returns LocalDate {
 #
 # + text - The text to parse.
 # + formatter - The formatter to use.
-# + return - The LocalDate.
-function parseWithFormatter(CharSequence text, DateTimeFormatter formatter) returns LocalDate {
-    handle externalObj = java_time_LocalDate_parse2(text.jObj, formatter.jObj);
+# + return - LocalDate|error — the constructed date, or an error if the date is invalid.
+public function parseWithFormatter(string text, DateTimeFormatter formatter) returns LocalDate|error {
+    handle externalObj = check trap java_time_LocalDate_parse2(java:fromString(text), formatter.jObj);
     LocalDate newObj = new (externalObj);
     return newObj;
 }
@@ -987,13 +1007,13 @@ function java_time_LocalDate_ofYearDay(int arg0, int arg1) returns handle|error 
     paramTypes: ["int", "int"]
 } external;
 
-function java_time_LocalDate_parse(handle arg0) returns handle = @java:Method {
+function java_time_LocalDate_parse(handle arg0) returns handle|error = @java:Method {
     name: "parse",
     'class: "java.time.LocalDate",
     paramTypes: ["java.lang.CharSequence"]
 } external;
 
-function java_time_LocalDate_parse2(handle arg0, handle arg1) returns handle = @java:Method {
+function java_time_LocalDate_parse2(handle arg0, handle arg1) returns handle|error = @java:Method {
     name: "parse",
     'class: "java.time.LocalDate",
     paramTypes: ["java.lang.CharSequence", "java.time.format.DateTimeFormatter"]

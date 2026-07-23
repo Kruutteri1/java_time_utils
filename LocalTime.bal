@@ -571,12 +571,12 @@ public function ofSecondOfDay(int secondOfDay) returns LocalTime|error {
     return newObj;
 }
 
-# Obtains an instance of LocalTime from a text string.
+# Obtains an instance of LocalTime from a text string, such as "14:28:19".
 #
 # + text - The text to parse.
-# + return - The LocalTime.
-function parseText(CharSequence text) returns LocalTime {
-    handle externalObj = java_time_LocalTime_parse(text.jObj);
+# + return - LocalTime|error — the constructed local time, or an error if the time is invalid.
+public function parseText(string text) returns LocalTime|error {
+    handle externalObj = check trap java_time_LocalTime_parse(java:fromString(text));
     LocalTime newObj = new (externalObj);
     return newObj;
 }
@@ -585,9 +585,9 @@ function parseText(CharSequence text) returns LocalTime {
 #
 # + text - The text to parse.
 # + formatter - The formatter to use.
-# + return - The LocalTime.
-function parseTextWithFormatter(CharSequence text, DateTimeFormatter formatter) returns LocalTime {
-    handle externalObj = java_time_LocalTime_parse2(text.jObj, formatter.jObj);
+# + return - LocalTime|error — the constructed local time, or an error if the time is invalid.
+public function parseTextWithFormatter(string text, DateTimeFormatter formatter) returns LocalTime|error {
+    handle externalObj = check trap java_time_LocalTime_parse2(java:fromString(text), formatter.jObj);
     LocalTime newObj = new (externalObj);
     return newObj;
 }
@@ -844,13 +844,13 @@ function java_time_LocalTime_ofSecondOfDay(int arg0) returns handle|error = @jav
     paramTypes: ["long"]
 } external;
 
-function java_time_LocalTime_parse(handle arg0) returns handle = @java:Method {
+function java_time_LocalTime_parse(handle arg0) returns handle|error = @java:Method {
     name: "parse",
     'class: "java.time.LocalTime",
     paramTypes: ["java.lang.CharSequence"]
 } external;
 
-function java_time_LocalTime_parse2(handle arg0, handle arg1) returns handle = @java:Method {
+function java_time_LocalTime_parse2(handle arg0, handle arg1) returns handle|error = @java:Method {
     name: "parse",
     'class: "java.time.LocalTime",
     paramTypes: ["java.lang.CharSequence", "java.time.format.DateTimeFormatter"]
