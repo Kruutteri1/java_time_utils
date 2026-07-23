@@ -300,10 +300,10 @@ public distinct class LocalDate {
     }
 
     # Returns a copy of this date with the specified period subtracted.
-    # + period - The amount to subtract.
+    # + interval - The amount to subtract.
     # + return - A date with the period subtracted.
-    function minusPeriod(TemporalAmount period) returns LocalDate {
-        handle externalObj = java_time_LocalDate_minus2(self.jObj, period.jObj);
+    public function minusPeriod(Period interval) returns LocalDate {
+        handle externalObj = java_time_LocalDate_minus2(self.jObj, interval.jObj);
         return new (externalObj);
     }
 
@@ -365,10 +365,10 @@ public distinct class LocalDate {
 
     # Returns a copy of this date with the specified period added.
     #
-    # + amount - The amount to add.
+    # + interval - The amount to add.
     # + return - A new LocalDate with the specified period added.
-    function plusPeriod(TemporalAmount amount) returns LocalDate {
-        handle externalObj = java_time_LocalDate_plus2(self.jObj, amount.jObj);
+    public function plusPeriod(Period interval) returns LocalDate {
+        handle externalObj = java_time_LocalDate_plus2(self.jObj, interval.jObj);
         return new (externalObj);
     }
 

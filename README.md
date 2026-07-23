@@ -22,7 +22,7 @@ A Ballerina wrapper library around `java.time` — providing `LocalDate`, `Local
 [[dependency]]
 org = "kruutteri1"
 name = "java_time_utils"
-version = "1.0.5"  # check central.ballerina.io for the latest version
+version = "1.0.7"  # check central.ballerina.io for the latest version
 ```
 
 ```ballerina
@@ -50,14 +50,14 @@ import kruutteri1/java_time_utils as jt;
 import ballerina/io;
 import kruutteri1/java_time_utils as jt;
 
-public function main() {
-    jt:LocalDate date = jt:ofDate(2026, 7, 15);
-    jt:LocalTime time = jt:ofTimeWithSecond(14, 28, 19);
-    jt:LocalDateTime dateTime = jt:ofLocalDateWithLocalTime(date, time);
+public function main() returns error? {
+    jt:LocalDate date = check jt:ofDate(2026, 7, 15);
+    jt:LocalTime time = check jt:ofTimeWithSecond(14, 28, 19);
+    jt:LocalDateTime dateTime = check jt:ofLocalDateWithLocalTime(date, time);
 
-    io:println(date.toString());
-    io:println(time.toString());
-    io:println(dateTime.toString());
+    io:println(date.toString());      // 2026-07-15
+    io:println(time.toString());      // 14:28:19
+    io:println(dateTime.toString());  // 2026-07-15T14:28:19
 }
 ```
 

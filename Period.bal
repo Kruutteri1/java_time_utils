@@ -327,7 +327,7 @@ public distinct class Period {
 # + startDateInclusive - The start date, inclusive.
 # + endDateExclusive - The end date, exclusive.
 # + return - The period between the start and end dates.
-public function between(LocalDate startDateInclusive, LocalDate endDateExclusive) returns Period {
+public function betweenPeriod(LocalDate startDateInclusive, LocalDate endDateExclusive) returns Period {
     handle externalObj = java_time_Period_between(startDateInclusive.jObj, endDateExclusive.jObj);
     Period newObj = new (externalObj);
     return newObj;

@@ -264,7 +264,7 @@ function testPlusYears_LocalDateTime() {
 }
 
 @test:Config {}
-function testPlusHours() {
+function testPlusHours_() {
     LocalDateTime dt = checkpanic ofWithSeconds(2026, 7, 15, 10, 0, 0);
     LocalDateTime next = dt.plusHours(2);
     test:assertEquals(next.toString(), "2026-07-15T12:00");
@@ -280,7 +280,7 @@ function testPlusHoursCrossesMidnightIntoNextDay() {
 }
 
 @test:Config {}
-function testPlusMinutes() {
+function testPlusMinutes_() {
     LocalDateTime dt = checkpanic ofDateTime(2026, 7, 15, 14, 50);
     LocalDateTime next = dt.plusMinutes(20);
     test:assertEquals(next.getHour(), 15);
@@ -288,7 +288,7 @@ function testPlusMinutes() {
 }
 
 @test:Config {}
-function testPlusSeconds() {
+function testPlusSeconds_() {
     LocalDateTime dt = checkpanic ofWithSeconds(2026, 7, 15, 14, 28, 50);
     LocalDateTime next = dt.plusSeconds(20);
     test:assertEquals(next.getMinute(), 29);
@@ -296,7 +296,7 @@ function testPlusSeconds() {
 }
 
 @test:Config {}
-function testPlusNanos() {
+function testPlusNanos_() {
     LocalDateTime dt = checkpanic ofWithNanos(2026, 7, 15, 0, 0, 0, 900000000);
     LocalDateTime next = dt.plusNanos(200000000);
     test:assertEquals(next.getSecond(), 1, "900ms + 200ms should roll over into the next second");
@@ -343,7 +343,7 @@ function testMinusHoursCrossesMidnightIntoPreviousDay() {
 }
 
 @test:Config {}
-function testMinusMinutes() {
+function testMinusMinutes_() {
     LocalDateTime dt = checkpanic ofDateTime(2026, 7, 15, 10, 5);
     LocalDateTime prev = dt.minusMinutes(10);
     test:assertEquals(prev.getHour(), 9);
@@ -351,7 +351,7 @@ function testMinusMinutes() {
 }
 
 @test:Config {}
-function testMinusSeconds() {
+function testMinusSeconds_() {
     LocalDateTime dt = checkpanic ofWithSeconds(2026, 7, 15, 10, 1, 10);
     LocalDateTime prev = dt.minusSeconds(20);
     test:assertEquals(prev.getMinute(), 0);
@@ -359,7 +359,7 @@ function testMinusSeconds() {
 }
 
 @test:Config {}
-function testMinusNanos() {
+function testMinusNanos_() {
     LocalDateTime dt = checkpanic ofWithNanos(2026, 7, 15, 0, 0, 1, 100000000);
     LocalDateTime prev = dt.minusNanos(200000000);
     test:assertEquals(prev.getSecond(), 0, "1s 100ms - 200ms should roll back into the previous second");
@@ -693,4 +693,71 @@ function testLocalDateTimeIsBeforeFalseWhenDateTimeDateLater() {
     LocalDateTime dateTime = checkpanic ofDateTime(2026, 7, 16, 0, 1);
     LocalDate date = checkpanic ofDate(2026, 7, 15);
     test:assertFalse(dateTime.isBefore(date), "2026-07-16T00:01 should not be before 2026-07-15");
+}
+
+@test:Config {}
+function testLocalDateTimePlusPeriod() {
+    LocalDateTime dateTime = checkpanic ofDateTime(2026, 7, 23, 12, 30);
+    Period period = ofPeriodMonths(6);
+    
+    LocalDateTime result = dateTime.plusInterval(period);
+    
+    test:assertEquals(result.getYear(), 2027);
+    test:assertEquals(result.getMonthValue(), 1);
+    test:assertEquals(result.getDayOfMonth(), 23);
+    test:assertEquals(result.getHour(), 12);
+    test:assertEquals(result.getMinute(), 30);
+}
+
+@test:Config {}
+function testLocalDateTimeMinusPeriod() {
+    LocalDateTime dateTime = checkpanic ofDateTime(2026, 7, 23, 12, 30);
+    Period period = ofPeriodMonths(1);
+    
+    LocalDateTime result = dateTime.minusInterval(period);
+    
+    test:assertEquals(result.getYear(), 2026);
+    test:assertEquals(result.getMonthValue(), 6);
+    test:assertEquals(result.getDayOfMonth(), 23);
+    test:assertEquals(result.getHour(), 12);
+    test:assertEquals(result.getMinute(), 30);
+}
+
+@test:Config {}
+function testLocalDateTimePlusDuration() {
+    LocalDateTime dateTime = checkpanic ofDateTime(2026, 7, 23, 12, 0);
+    Duration duration = ofHours(3);
+    
+    LocalDateTime result = dateTime.plusInterval(duration);
+    
+    test:assertEquals(result.getYear(), 2026);
+    test:assertEquals(result.getMonthValue(), 7);
+    test:assertEquals(result.getDayOfMonth(), 23);
+    test:assertEquals(result.getHour(), 15);
+    test:assertEquals(result.getMinute(), 0);
+}
+
+@test:Config {}
+function testLocalDateTimeMinusDuration() {
+    LocalDateTime dateTime = checkpanic ofDateTime(2026, 7, 23, 15, 0);
+    Duration duration = ofMinutes(45);
+    
+    LocalDateTime result = dateTime.minusInterval(duration);
+    
+    test:assertEquals(result.getYear(), 2026);
+    test:assertEquals(result.getMonthValue(), 7);
+    test:assertEquals(result.getDayOfMonth(), 23);
+    test:assertEquals(result.getHour(), 14);
+    test:assertEquals(result.getMinute(), 15);
+}
+
+@test:Config {}
+function testLocalDateTimePlusIntervalImmutability() {
+    LocalDateTime dateTime = checkpanic ofDateTime(2026, 7, 23, 12, 0);
+    Duration duration = ofDays(10);
+    
+    _ = dateTime.plusInterval(duration);
+    
+    test:assertEquals(dateTime.getDayOfMonth(), 23);
+    test:assertEquals(dateTime.getHour(), 12);
 }

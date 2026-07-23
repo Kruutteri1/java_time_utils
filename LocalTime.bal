@@ -187,7 +187,7 @@ public distinct class LocalTime {
     #
     # + amount - The amount to subtract.
     # + return - A LocalTime based on this one with the specified amount subtracted.
-    function minus2(TemporalAmount amount) returns LocalTime {
+    public function minusDuration(Duration amount) returns LocalTime {
         handle externalObj = java_time_LocalTime_minus2(self.jObj, amount.jObj);
         LocalTime newObj = new (externalObj);
         return newObj;
@@ -258,7 +258,7 @@ public distinct class LocalTime {
     #
     # + amount - The amount to add.
     # + return - A LocalTime based on this one with the specified period added.
-    function plusAmount(TemporalAmount amount) returns LocalTime {
+    function plusDuration(Duration amount) returns LocalTime {
         handle externalObj = java_time_LocalTime_plus2(self.jObj, amount.jObj);
         LocalTime newObj = new (externalObj);
         return newObj;

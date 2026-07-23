@@ -279,7 +279,7 @@ function testAtTimeFull() {
 // ===================================================================
 
 @test:Config {}
-function testPlusDays() {
+function testPlusDays_() {
     LocalDate d = checkpanic ofDate(2026, 7, 15);
     LocalDate next = d.plusDays(1);
     test:assertEquals(next.toString(), "2026-07-16");
@@ -341,7 +341,7 @@ function testPlusYearsLeapDayClamped() {
 // ===================================================================
 
 @test:Config {}
-function testMinusDays() {
+function testMinusDays_() {
     LocalDate d = checkpanic ofDate(2026, 7, 15);
     LocalDate prev = d.minusDays(1);
     test:assertEquals(prev.toString(), "2026-07-14");
@@ -735,4 +735,39 @@ function testIsAfterAndIsBeforeAreMutuallyExclusiveAcrossTypes() {
 
     test:assertTrue(after, "2026-08-01 should be after 2026-07-31T12:00");
     test:assertFalse(before, "2026-08-01 should not also be before 2026-07-31T12:00");
+}
+
+
+@test:Config {}
+function testLocalDatePlusPeriod() {
+    LocalDate date = checkpanic ofDate(2026, 1, 15);
+    Period period = ofPeriodMonths(2);
+    
+    LocalDate result = date.plusPeriod(period);
+    
+    test:assertEquals(result.getYear(), 2026);
+    test:assertEquals(result.getMonthValue(), 3);
+    test:assertEquals(result.getDayOfMonth(), 15);
+}
+
+@test:Config {}
+function testLocalDateMinusPeriod() {
+    LocalDate date = checkpanic ofDate(2026, 5, 10);
+    Period period = ofPeriodYears(1);
+    
+    LocalDate result = date.minusPeriod(period);
+    
+    test:assertEquals(result.getYear(), 2025);
+    test:assertEquals(result.getMonthValue(), 5);
+    test:assertEquals(result.getDayOfMonth(), 10);
+}
+
+@test:Config {}
+function testLocalDatePlusIntervalImmutability() {
+    LocalDate date = checkpanic ofDate(2026, 7, 23);
+    Period period = ofPeriodDays(10);
+    
+    _ = date.plusPeriod(period);
+    
+    test:assertEquals(date.getDayOfMonth(), 23);
 }

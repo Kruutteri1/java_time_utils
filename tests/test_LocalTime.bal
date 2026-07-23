@@ -120,7 +120,7 @@ function testEqualsTrueForSameValues_LocalTime() {
 }
 
 @test:Config {}
-function testCompareToEqual() {
+function testCompareToEqual_() {
     LocalTime t1 = checkpanic ofTime(10, 0);
     LocalTime t2 = checkpanic ofTime(10, 0);
     test:assertEquals(t1.compareTo(t2), 0, "Equal times should compare as 0");
@@ -489,4 +489,98 @@ function testParseLocalTimeWithFormatterMismatch() returns error? {
     DateTimeFormatter formatter = check ofPattern("HH:mm:ss");
     LocalTime|error result = parseTextWithFormatter("14-28-19", formatter);
     test:assertTrue(result is error, "Mismatched pattern and text for LocalTime should result in an error");
+}
+
+@test:Config {}
+function testLocalTimePlusDurationHours() {
+    LocalTime time = checkpanic ofTimeWithSecond(10, 15, 0);
+    Duration duration = ofHours(3);
+    
+    LocalTime result = time.plusDuration(duration);
+    
+    test:assertEquals(result.getHour(), 13);
+    test:assertEquals(result.getMinute(), 15);
+    test:assertEquals(result.getSecond(), 0);
+}
+
+@test:Config {}
+function testLocalTimePlusDurationMinutes() {
+    LocalTime time = checkpanic ofTimeWithSecond(12, 30, 0);
+    Duration duration = ofMinutes(45);
+    
+    LocalTime result = time.plusDuration(duration);
+    
+    test:assertEquals(result.getHour(), 13);
+    test:assertEquals(result.getMinute(), 15);
+    test:assertEquals(result.getSecond(), 0);
+}
+
+@test:Config {}
+function testLocalTimePlusDurationSeconds() {
+    LocalTime time = checkpanic ofTimeWithSecond(23, 59, 30);
+    Duration duration = ofSeconds(45);
+    
+    LocalTime result = time.plusDuration(duration);
+    
+    test:assertEquals(result.getHour(), 0);
+    test:assertEquals(result.getMinute(), 0);
+    test:assertEquals(result.getSecond(), 15);
+}
+
+@test:Config {}
+function testLocalTimePlusDurationImmutability() {
+    LocalTime time = checkpanic ofTimeWithSecond(12, 0, 0);
+    Duration duration = ofHours(2);
+    
+    _ = time.plusDuration(duration);
+    
+    test:assertEquals(time.getHour(), 12);
+    test:assertEquals(time.getMinute(), 0);
+}
+
+@test:Config {}
+function testLocalTimeMinusDurationHours() {
+    LocalTime time = checkpanic ofTimeWithSecond(15, 30, 0);
+    Duration duration = ofHours(2);
+    
+    LocalTime result = time.minusDuration(duration);
+    
+    test:assertEquals(result.getHour(), 13);
+    test:assertEquals(result.getMinute(), 30);
+    test:assertEquals(result.getSecond(), 0);
+}
+
+@test:Config {}
+function testLocalTimeMinusDurationMinutes() {
+    LocalTime time = checkpanic ofTimeWithSecond(12, 15, 0);
+    Duration duration = ofMinutes(45);
+    
+    LocalTime result = time.minusDuration(duration);
+    
+    test:assertEquals(result.getHour(), 11);
+    test:assertEquals(result.getMinute(), 30);
+    test:assertEquals(result.getSecond(), 0);
+}
+
+@test:Config {}
+function testLocalTimeMinusDurationSeconds() {
+    LocalTime time = checkpanic ofTimeWithSecond(10, 0, 30);
+    Duration duration = ofSeconds(45);
+    
+    LocalTime result = time.minusDuration(duration);
+    
+    test:assertEquals(result.getHour(), 9);
+    test:assertEquals(result.getMinute(), 59);
+    test:assertEquals(result.getSecond(), 45);
+}
+
+@test:Config {}
+function testLocalTimeMinusDurationImmutability() {
+    LocalTime time = checkpanic ofTimeWithSecond(12, 0, 0);
+    Duration duration = ofHours(1);
+    
+    _ = time.minusDuration(duration);
+    
+    test:assertEquals(time.getHour(), 12);
+    test:assertEquals(time.getMinute(), 0);
 }
