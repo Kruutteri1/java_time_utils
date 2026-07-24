@@ -57,6 +57,16 @@ function testParseDuration() {
     test:assertEquals(d.getSeconds(), 20);
 }
 
+@test:Config
+function testParseDurationSuccess() {
+    Duration d1 = parseDuration("PT2H15M30S");
+    test:assertEquals(d1.getSeconds(), 8130);
+
+    Duration d2 = parseDuration("PT20.345S");
+    test:assertEquals(d2.getSeconds(), 20);
+    test:assertEquals(d2.getNano(), 345000000);
+}
+
 @test:Config {}
 function testBetweenLocalDateTimes() {
     LocalDateTime|error startDate = ofDateTime(2026, 7, 15, 10, 0);

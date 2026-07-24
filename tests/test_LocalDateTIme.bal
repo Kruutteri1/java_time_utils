@@ -172,7 +172,7 @@ function testGetNano() {
 }
 
 @test:Config {}
-function testHashCodeConsistency() {
+function testHashCodeConsistency_() {
     LocalDateTime dt1 = checkpanic ofDateTime(2026, 7, 15, 14, 28);
     LocalDateTime dt2 = checkpanic ofDateTime(2026, 7, 15, 14, 28);
     test:assertEquals(dt1.hashCode(), dt2.hashCode(), "Hash codes of equal date-times should match");

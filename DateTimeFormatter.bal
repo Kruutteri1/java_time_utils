@@ -262,7 +262,7 @@ public distinct class DateTimeFormatter {
     #
     # + arg0 - The `DecimalStyle` value required to map with the Java method parameter.
     # + return - The `DateTimeFormatter` value returning from the Java mapping.
-    public function withDecimalStyle(DecimalStyle arg0) returns DateTimeFormatter {
+    function withDecimalStyle(DecimalStyle arg0) returns DateTimeFormatter {
         handle externalObj = java_time_format_DateTimeFormatter_withDecimalStyle(self.jObj, arg0.jObj);
         DateTimeFormatter newObj = new (externalObj);
         return newObj;
